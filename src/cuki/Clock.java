@@ -8,7 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import cuki.OpcConn;
+//import cuki.OpcConn;
 
 @SuppressWarnings("serial")
 public class Clock extends Applet implements Runnable {
@@ -27,7 +27,7 @@ public class Clock extends Applet implements Runnable {
 	private double x = 0D;
 	private double y = 0D;
 	private int angulo = 0;
-	private OpcConn conector;
+//	private OpcConn conector;
 
 	public void init() {
 		setSize(windowSize);
