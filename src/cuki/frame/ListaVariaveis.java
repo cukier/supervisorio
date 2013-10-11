@@ -2,11 +2,7 @@ package cuki.frame;
 
 import java.awt.EventQueue;
 
-import cuki.bin.OpcConn;
 import cuki.frame.Dialog1;
-import javafish.clients.opc.exception.CoInitializeException;
-import javafish.clients.opc.exception.HostException;
-import javafish.clients.opc.exception.NotFoundServersException;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -22,11 +18,8 @@ public class ListaVariaveis extends JFrame {
 
 	private JPanel contentPane;
 	private Dialog1 dg;
-	private String[] servidores;
+	private String[] servidores = new String[100];
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -40,12 +33,9 @@ public class ListaVariaveis extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public ListaVariaveis() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 150, 143);
+		setBounds(100, 100, 150, 172);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -57,13 +47,11 @@ public class ListaVariaveis extends JFrame {
 		btnConectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					servidores = OpcConn.connect();
-				} catch (CoInitializeException e1) {
+					// OpcConn.connect();
+					System.out.println("Ok");
+
+				} catch (Exception e1) {
 					e1.printStackTrace();
-				} catch (HostException e2) {
-					e2.printStackTrace();
-				} catch (NotFoundServersException e3) {
-					e3.printStackTrace();
 				}
 			}
 		});
@@ -73,17 +61,36 @@ public class ListaVariaveis extends JFrame {
 		contentPane.add(btnDesconectar);
 		btnDesconectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Desconectar");
-				new ListaVariaveis();
+				// OpcConn.disconnect();
 			}
 		});
 
-		JButton btnListar = new JButton("Listar");
-		btnListar.setBounds(10, 79, 120, 23);
-		contentPane.add(btnListar);
-		btnListar.addActionListener(new ActionListener() {
+		JButton btnListarGrupos = new JButton("Listar Grupos");
+		btnListarGrupos.setBounds(10, 79, 120, 23);
+		contentPane.add(btnListarGrupos);
+		btnListarGrupos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Listar");
+				if (dg != null) {
+					dg.dispose();
+					dg = null;
+				}
+				try {
+					// servidores = OpcConn.listarItens();
+					dg = new Dialog1(servidores);
+					dg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dg.setVisible(true);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+
+		JButton btnListarItens = new JButton("Listar Itens");
+		btnListarItens.setBounds(10, 113, 120, 23);
+		contentPane.add(btnListarItens);
+		btnListarItens.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
 			}
 		});
 	}
