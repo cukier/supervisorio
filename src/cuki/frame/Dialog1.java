@@ -36,7 +36,7 @@ public class Dialog1 extends JDialog {
 			}
 			repaint();
 		}
-		setBounds(250, 100, tamanho * 7, 300);
+		setBounds(250, 100, 112, 92);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
