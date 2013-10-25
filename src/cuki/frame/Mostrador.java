@@ -12,12 +12,11 @@ import javax.swing.border.Border;
 
 public class Mostrador extends JPanel {
 
-	/**
-	 * Create the panel.
-	 */
-	public Mostrador(String msg) {
+	private JLabel lblNewLabel = null;
 
-		JLabel lblNewLabel = new JLabel("Contador: " + msg);
+	public Mostrador() {
+
+		lblNewLabel = new JLabel("Contador: ");
 		add(lblNewLabel);
 
 	}
@@ -28,5 +27,9 @@ public class Mostrador extends JPanel {
 
 	public void setThisBorder(Border border) {
 		setBorder(border);
+	}
+
+	public void setAngulo(int angulo) {
+		lblNewLabel.setText("Contador: " + String.valueOf(angulo));
 	}
 }

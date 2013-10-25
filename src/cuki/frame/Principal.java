@@ -11,26 +11,9 @@ import net.miginfocom.swing.MigLayout;
 public class Principal extends JFrame {
 
 	private JPanel contentPane;
+	private Oval panel;
+	private Mostrador panel_1;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Principal frame = new Principal();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public Principal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -38,12 +21,17 @@ public class Principal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new MigLayout("", "[grow][grow]", "[grow]"));
-		
-		Oval panel = new Oval();
+
+		panel = new Oval();
 		contentPane.add(panel, "cell 0 0,grow");
-		
-		Mostrador panel_1 = new Mostrador((String) null);
+
+		panel_1 = new Mostrador();
 		contentPane.add(panel_1, "cell 1 0,grow");
+	}
+
+	public void setPanel(int angulo) {
+		panel.setAngulo(angulo);
+		panel_1.setAngulo(angulo);
 	}
 
 }
