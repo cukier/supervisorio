@@ -9,37 +9,26 @@ public class Pivo {
 	private Principal frame;
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+		Pivo window = new Pivo();
+		window.frame.setVisible(true);
+		for (int cont = 0; cont < 10; cont++) {
+			synchronized (window) {
 				try {
-					Pivo window = new Pivo();
-					window.frame.setVisible(true);
-					for (int cont = 0; cont < 10; cont++) {
-						synchronized (window) {
-							window.wait(1000);
-						}
-						window.frame.setPanel(cont);
-						window.frame.repaint();
-						System.out.println(cont);
-
-					}
-				} catch (Exception e) {
+					window.wait(1000);
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-		});
+			window.frame.setPanel(cont);
+			window.frame.repaint();
+			System.out.println(cont);
+		}
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public Pivo() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frame = new Principal();
 		frame.setBounds(100, 100, 450, 300);
