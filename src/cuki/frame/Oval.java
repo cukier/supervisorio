@@ -30,13 +30,12 @@ public class Oval extends JPanel {
 		else
 			diam = alt;
 
-		int x = (int) (diam / 2 * (Math.sin(angulo * Math.PI / 180) - 1));
-		int y = (int) (diam / 2 * (Math.cos(angulo * Math.PI / 180) - 1));
-
-		origem.setLocation(larg / 2, alt / 2);
-		dest.setLocation(x, y);
+		int x = (int) (diam / 2 * (Math.cos(angulo * Math.PI / 180) + 1));
+		int y = (int) (diam / 2 * (Math.sin(angulo * Math.PI / 180) + 1));
 
 		Ellipse2D aro = new Ellipse2D.Double(0, 0, diam, diam);
+		origem.setLocation(aro.getCenterX(), aro.getCenterY());
+		dest.setLocation(x, y);
 		Line2D linha = new Line2D.Double(origem, dest);
 
 		g2.draw(aro);
@@ -44,6 +43,6 @@ public class Oval extends JPanel {
 	}
 
 	public void setAngulo(int angulo) {
-		this.angulo = angulo;
+		this.angulo = angulo * 10;
 	}
 }

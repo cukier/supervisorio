@@ -29,6 +29,11 @@ public class Principal extends JFrame {
 		contentPane.add(panel_1, "cell 1 0,grow");
 	}
 
+	public Principal(int init) {
+		this();
+		setPanel(init);
+	}
+
 	public void setPanel(int angulo) {
 		panel.setAngulo(angulo);
 		panel_1.setAngulo(angulo);

@@ -9,8 +9,9 @@ public class Pivo {
 	private Principal frame;
 
 	public static void main(String[] args) {
-		Pivo window = new Pivo();
+		Pivo window = new Pivo(0);
 		window.frame.setVisible(true);
+		System.out.println(window.frame.getSize());
 		for (int cont = 0; cont < 10; cont++) {
 			synchronized (window) {
 				try {
@@ -21,16 +22,15 @@ public class Pivo {
 			}
 			window.frame.setPanel(cont);
 			window.frame.repaint();
-			System.out.println(cont);
 		}
 	}
 
-	public Pivo() {
-		initialize();
+	public Pivo(int init) {
+		initialize(init);
 	}
 
-	private void initialize() {
-		frame = new Principal();
+	private void initialize(int init) {
+		frame = new Principal(init);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
