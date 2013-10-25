@@ -1,61 +1,49 @@
 package cuki.frame;
 
-import cuki.frame.Mostrador;
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import net.miginfocom.swing.MigLayout;
 
-import java.awt.EventQueue;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import javax.swing.JToolBar;
-
-@SuppressWarnings("serial")
 public class Principal extends JFrame {
 
-	private JPanel panel = null;
+	private JPanel contentPane;
 
+	/**
+	 * Launch the application.
+	 */
 	public static void main(String[] args) {
-		Principal test = new Principal();
-		final Principal frame = new Principal();
-
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					Principal frame = new Principal();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-		/*
-		 * for (int i = 0; i <= 2 * 360; i += 6) { synchronized (test) { try {
-		 * test.wait(250); } catch (InterruptedException e) {
-		 * e.printStackTrace(); } // panel.seAngulo(i); panel.repaint(); } }
-		 */
 	}
 
 	/**
 	 * Create the frame.
 	 */
 	public Principal() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(
-				"C:\\Users\\cuki\\Desktop\\logo-K.png"));
-		setTitle("Pivo");
-		setSize(503, 287);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		getContentPane().setLayout(new BorderLayout(0, 0));
-
-		panel = new Oval();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		getContentPane().add(panel, BorderLayout.CENTER);
-
-		JPanel panel_1 = new Mostrador();
-		getContentPane().add(panel_1, BorderLayout.EAST);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(new MigLayout("", "[grow][grow]", "[grow]"));
+		
+		Oval panel = new Oval();
+		contentPane.add(panel, "cell 0 0,grow");
+		
+		Mostrador panel_1 = new Mostrador((String) null);
+		contentPane.add(panel_1, "cell 1 0,grow");
 	}
+
 }
