@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class Oval extends JPanel {
 
-	private int angulo;
+	private int angulo = 0;
 	private int larg = 240;
 	private int alt = 240;
 	private int diam = 200;
@@ -30,8 +30,8 @@ public class Oval extends JPanel {
 		Point origem = new Point();
 		Point dest = new Point();
 
-		int x = (int) ((larg + diam * Math.cos(angulo * Math.PI / 180)) / 2);
-		int y = (int) ((alt + diam * Math.sin(angulo * Math.PI / 180)) / 2);
+		int x = (int) ((larg + diam * Math.sin(angulo * Math.PI / 180)) / 2);
+		int y = (int) ((alt - diam * Math.cos(angulo * Math.PI / 180)) / 2);
 
 		origem.setLocation(aro.getCenterX(), aro.getCenterY());
 		dest.setLocation(x, y);

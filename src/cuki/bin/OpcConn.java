@@ -198,16 +198,21 @@ public class OpcConn {
 		}
 	}
 
-	public void response() throws ComponentNotFoundException,
+	public OpcGroup synchResponse() throws ComponentNotFoundException,
 			SynchReadException {
+
+		OpcGroup responseGroup = null;
+
 		try {
-			OpcGroup responseGroup = jopc.synchReadGroup(group);
-			System.out.println(responseGroup);
+			responseGroup = jopc.synchReadGroup(group);
+			// System.out.println(responseGroup);
 		} catch (ComponentNotFoundException e1) {
 			e1.printStackTrace();
 		} catch (SynchReadException e1) {
 			e1.printStackTrace();
 		}
+
+		return responseGroup;
 	}
 
 	public void disconn() {
