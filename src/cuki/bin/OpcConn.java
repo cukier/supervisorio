@@ -25,6 +25,9 @@ public class OpcConn {
 	private static int id = 0;
 	private JOpc jopc = null;
 	OpcGroup group = null;
+	OpcItem tempoRestanteMinutos, laminaNominal, cicloAtual, nrSetores,
+			contaFase, contaSetor, nrFases, laminaGet, tempoRestanteHoras,
+			anguloAtual, byte4, byte6;
 
 	public OpcConn(String host, String server) {
 		this.host = host;

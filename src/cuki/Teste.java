@@ -57,15 +57,49 @@ public class Teste {
 			System.out
 					.println("====================================================================================================================================================");
 			for (OpcItem item : group.getItems()) {
-				System.out.printf("%.40s", item.getItemName());
-				// System.out.println("Acess Path " + item.getAccessPath());
-				System.out.printf("\t\tValue: " + item.getValue());
-				// System.out
-				// .println("Value Int: " + item.getValue().getInteger());
-				// System.out.println("Value Float: "
-				// + (float) item.getValue().getFloat());
-				// System.out.println("Type: " + item.getDataType());
-				System.out.printf("%20s", "Quality: " + item.isQuality());
+				System.out.println(item.getItemName());
+				// System.out.println(item.toString());
+				// System.out.println(item.getValue());
+				// System.out.println(item.getDataType());
+				// if (item.getDataType() == Variant.VT_I2 || ) {
+				// try {
+				// Variant aux = new Variant(item.getValue());
+				// int nr = aux.getWord();
+				// System.out.println("Em int: " + nr);
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// }
+				// }
+				// System.out.println(item.toString());
+				// System.out.println(Arrays.asList(item.toString().split("; ")));
+
+				for (String aux : item.toString().split(";")) {
+					if (aux.contains("itemValue")) {
+						for (String aux2 : aux.split(" = ")) {
+							if (!aux2.contains("itemValue")) {
+								System.out.println(aux2);
+								try {
+									int nr = Integer.parseInt(aux2);
+									System.out.println("nr: " + nr);
+								} catch (Exception e) {
+									try {
+										int nr = Integer.parseInt(aux2, 16);
+										System.out.println("nr 16: " + nr);
+									} catch (Exception e1) {
+										float nr = Float.parseFloat(aux2);
+										System.out.println("nr f:" + nr);
+									}
+								}
+							}
+						}
+					}
+				}
+
+				// System.out.printf("%60s", item.getItemName());
+				// System.out.printf("40%s", " Value: " + item.getValue());
+				// int aux = item.getValue().getInteger();
+				// System.out.printf("%40s", " tipo: " + aux);
+				// System.out.printf("%s", " Quality: " + item.isQuality());
 				System.out.println("");
 			}
 		}
