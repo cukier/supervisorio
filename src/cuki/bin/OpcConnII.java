@@ -1,5 +1,7 @@
 package cuki.bin;
 
+import java.text.NumberFormat;
+
 import javafish.clients.opc.JOpc;
 import javafish.clients.opc.component.OpcGroup;
 import javafish.clients.opc.component.OpcItem;
@@ -102,18 +104,58 @@ public class OpcConnII {
 		}
 	}
 
-	public int getTempoRestanteMinutos() throws ComponentNotFoundException,
-			SynchReadException {
-		int retorno;
+	private int parseItem(OpcItem item) throws NumberFormatException {
+
+		int retorno = 0;
+
+		for (String aux : item.toString().split(";")) {
+			if (aux.contains("itemValue")) {
+				for (String aux2 : aux.split(" = ")) {
+					if (!aux2.contains("itemValue")) {
+						try {
+							retorno = Integer.parseInt(aux2);
+						} catch (NumberFormatException e) {
+							try {
+								retorno = Integer.parseInt(aux2, 16);
+							} catch (NumberFormatException e1) {
+								throw new NumberFormatException(
+										"Formato errado");
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return retorno;
+	}
+
+	private int getResponse(OpcItem item, String itemName)
+			throws ComponentNotFoundException, SynchReadException {
+		int retorno = 0;
 
 		try {
-			OpcItem responseItem = jopc.synchReadItem(group,
-					tempoRestanteMinutos);
-			retorno = responseItem.getValue().getInteger();
+			OpcItem response = jopc.synchReadItem(group, item);
+			retorno = parseItem(response);
 		} catch (ComponentNotFoundException e) {
 			throw new ComponentNotFoundException("No component found");
 		} catch (SynchReadException e) {
-			throw new SynchReadException("responseItem Synch read error");
+			throw new SynchReadException(itemName + " Synch read error");
+		}
+
+		return retorno;
+	}
+
+	public int getTempoRestanteMinutos() throws ComponentNotFoundException,
+			SynchReadException {
+		int retorno = 0;
+
+		try {
+			retorno = getResponse(tempoRestanteMinutos, "tempoRestanteMinutos");
+		} catch (ComponentNotFoundException e) {
+			throw e;
+		} catch (SynchReadException e) {
+			throw e;
 		}
 
 		return retorno;
@@ -121,40 +163,14 @@ public class OpcConnII {
 
 	public int getanguloAtual() throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno;
-		Variant resposta;
+		int retorno = 0;
 
 		try {
-			OpcItem responseItem = jopc.synchReadItem(group, anguloAtual);
-			resposta = responseItem.getValue();
+			retorno = getResponse(anguloAtual, "anguloAtual");
 		} catch (ComponentNotFoundException e) {
-			throw new ComponentNotFoundException("No component found");
+			throw e;
 		} catch (SynchReadException e) {
-			throw new SynchReadException("getanguloAtual Synch read error");
-		}
-
-		try {
-			String aux = resposta.getString();
-			System.out.println(aux);
-		} catch (VariantTypeException e) {
-			throw new VariantTypeException("Problemas de conversao de tipo");
-		}
-
-		// return retorno;
-		return 105;
-	}
-
-	public int getlaminaGet() throws ComponentNotFoundException,
-			SynchReadException {
-		int retorno;
-
-		try {
-			OpcItem responseItem = jopc.synchReadItem(group, laminaGet);
-			retorno = responseItem.getValue().getInteger();
-		} catch (ComponentNotFoundException e) {
-			throw new ComponentNotFoundException("No component found");
-		} catch (SynchReadException e) {
-			throw new SynchReadException("Synch read error");
+			throw e;
 		}
 
 		return retorno;

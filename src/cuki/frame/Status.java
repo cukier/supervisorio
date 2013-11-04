@@ -7,8 +7,6 @@ import javax.swing.JFrame;
 
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.UIManager;
-
 @SuppressWarnings("serial")
 public class Status extends JFrame {
 
