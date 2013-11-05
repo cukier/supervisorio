@@ -8,8 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -20,7 +18,6 @@ public class AnguloAtual extends JPanel {
 	private int alt = 60;
 	private JLabel lblAngulo;
 	private JButton BtoSentido;
-	private Boolean sentido = true;
 
 	public AnguloAtual() {
 		setPreferredSize(new Dimension(larg, alt));
@@ -35,7 +32,7 @@ public class AnguloAtual extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-//		BtoSentido.setText("Sentido Horário");
+		// BtoSentido.setText("Sentido Horário");
 		BtoSentido.setIcon(new ImageIcon(Status.class
 				.getResource("/icones/horario-20x18.png")));
 		add(BtoSentido, "cell 1 0,alignx center,aligny center");
@@ -48,11 +45,11 @@ public class AnguloAtual extends JPanel {
 
 	public void setSentido(Boolean sentido) {
 		if (sentido) {
-//			BtoSentido.setText("Sentido Horário");
+			// BtoSentido.setText("Sentido Horário");
 			BtoSentido.setIcon(new ImageIcon(Status.class
 					.getResource("/icones/horario-20x18.png")));
 		} else {
-//			BtoSentido.setText("Sentido Anti-Horário");
+			// BtoSentido.setText("Sentido Anti-Horário");
 			BtoSentido.setIcon(new ImageIcon(Status.class
 					.getResource("/icones/anti-horario-20x18.png")));
 		}

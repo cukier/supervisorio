@@ -1,7 +1,5 @@
 package cuki;
 
-import java.util.Arrays;
-
 import javafish.clients.opc.component.OpcGroup;
 import javafish.clients.opc.component.OpcItem;
 import javafish.clients.opc.exception.CoInitializeException;
@@ -12,7 +10,6 @@ import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
 import javafish.clients.opc.exception.UnableBrowseBranchException;
 import javafish.clients.opc.exception.UnableIBrowseException;
-import javafish.clients.opc.variant.Variant;
 import cuki.bin.OpcConn;
 
 public class Teste {
