@@ -1,7 +1,5 @@
 package cuki.bin;
 
-import java.text.NumberFormat;
-
 import javafish.clients.opc.JOpc;
 import javafish.clients.opc.component.OpcGroup;
 import javafish.clients.opc.component.OpcItem;
@@ -11,7 +9,6 @@ import javafish.clients.opc.exception.SynchReadException;
 import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
 import javafish.clients.opc.exception.VariantTypeException;
-import javafish.clients.opc.variant.Variant;
 
 public class OpcConnII {
 
@@ -21,7 +18,7 @@ public class OpcConnII {
 	private JOpc jopc;
 	private OpcGroup group;
 	private OpcItem tempoRestanteMinutos;
-	private OpcItem laminaNominal;
+	// private OpcItem laminaNominal;
 	private OpcItem cicloAtual;
 	private OpcItem nrSetores;
 	private OpcItem contaFase;
@@ -34,21 +31,21 @@ public class OpcConnII {
 	private OpcItem byte6;
 
 	public OpcConnII() {
-		this("localhost", "Atos.OPCConnect.1");
+		this("localhost", "Atos.OPCConnect.1", "JOpcAtos1");
 	}
 
-	public OpcConnII(String host, String server) {
+	public OpcConnII(String host, String server, String serverClientHandle) {
 
 		this.host = host;
 		this.server = server;
-		this.serverClientHandle = "JOpcAtos1";
+		this.serverClientHandle = serverClientHandle;
 
-		jopc = new JOpc(this.host, this.server, serverClientHandle);
+		jopc = new JOpc(this.host, this.server, this.serverClientHandle);
 
 		tempoRestanteMinutos = new OpcItem(
 				"Equipamento1.ASYNC.tempoRestanteMinutos", true, "");
-		laminaNominal = new OpcItem("Equipamento1.ASYNC.laminaNominal", true,
-				"");
+		// laminaNominal = new OpcItem("Equipamento1.ASYNC.laminaNominal", true,
+		// "");
 		cicloAtual = new OpcItem("Equipamento1.ASYNC.cicloAtual", true, "");
 		nrSetores = new OpcItem("Equipamento1.ASYNC.nrSetores", true, "");
 		contaFase = new OpcItem("Equipamento1.ASYNC.contaFase", true, "");
@@ -58,13 +55,13 @@ public class OpcConnII {
 		tempoRestanteHoras = new OpcItem(
 				"Equipamento1.ASYNC.tempoRestanteHoras", true, "");
 		anguloAtual = new OpcItem("Equipamento1.SYNC.anguloAtual", true, "");
-		byte4 = new OpcItem("Equipamento1.ASYNC.Byte4", true, "");
-		byte6 = new OpcItem("Equipamento1.ASYNC.Byte6", true, "");
+		byte4 = new OpcItem("Equipamento1.SYNC.Byte4", true, "");
+		byte6 = new OpcItem("Equipamento1.SYNC.Byte6", true, "");
 
 		group = new OpcGroup("group1", true, 500, 0.0f);
 
 		group.addItem(tempoRestanteMinutos);
-		group.addItem(laminaNominal);
+		// group.addItem(laminaNominal);
 		group.addItem(cicloAtual);
 		group.addItem(nrSetores);
 		group.addItem(contaFase);

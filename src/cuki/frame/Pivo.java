@@ -1,15 +1,10 @@
 package cuki.frame;
 
-import javafish.clients.opc.component.OpcGroup;
-import javafish.clients.opc.component.OpcItem;
-import javafish.clients.opc.exception.CoInitializeException;
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
 import javafish.clients.opc.exception.SynchReadException;
 import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
-import javafish.clients.opc.exception.UnableBrowseBranchException;
-import javafish.clients.opc.exception.UnableIBrowseException;
 
 import javax.swing.UIManager;
 
@@ -31,7 +26,6 @@ public class Pivo {
 
 		Pivo window = new Pivo();
 		window.frame.setVisible(true);
-		System.out.println(window.frame.getSize());
 
 		try {
 			window.con.connectAndRegister();
