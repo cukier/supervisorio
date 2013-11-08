@@ -19,8 +19,9 @@ public class TesteOpcConnII {
 	private static int nrFases;
 	private static int laminaGet;
 	private static int tempoRestanteHoras;
-	private static int byte4;
-	private static int byte6;
+	private static int word0;
+	private static int word4;
+	private static int word6;
 	private static int anguloAtual;
 	private int minutos = 5;
 	private OpcConnII con = null;
@@ -74,8 +75,9 @@ public class TesteOpcConnII {
 				nrFases = test.con.getnrFases();
 				laminaGet = test.con.getlaminaGet();
 				tempoRestanteHoras = test.con.gettempoRestanteHoras();
-				byte4 = test.con.getbyte4();
-				byte6 = test.con.getbyte6();
+				word0 = test.con.getword0();
+				word4 = test.con.getword4();
+				word6 = test.con.getword6();
 			} catch (ComponentNotFoundException e) {
 				e.printStackTrace();
 			} catch (SynchReadException e) {
@@ -94,8 +96,9 @@ public class TesteOpcConnII {
 			System.out.println("Setor: " + contaSetor);
 			System.out.println("Tempo estimado: " + tempoRestanteHoras + "h "
 					+ tempoRestanteMinutos + "min.");
-			System.out.println("Byte4: " + byte4);
-			System.out.println("Byte6: " + byte6);
+			System.out.println("word4: " + word0);
+			System.out.println("word4: " + word4);
+			System.out.println("word6: " + word6);
 			System.out.println("");
 		}
 	}

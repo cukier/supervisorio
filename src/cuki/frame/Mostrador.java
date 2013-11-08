@@ -1,8 +1,10 @@
 package cuki.frame;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -73,11 +75,57 @@ public class Mostrador extends JPanel {
 		bto.setFont(new Font("Helvetica Neue Light", Font.PLAIN, 15));
 		add(bto, "2, 14, center, default");
 
+		setBorder(BorderFactory.createTitledBorder("Situação Atual do Pivô"));
+		setForeground(Color.WHITE);
 		setPreferredSize(new Dimension(larg, alt));
 	}
 
-	public void setEstado(String estado) {
-		this.estado.setText(estado);
+	public void setEstado(int estado) {
+		String str = "Não conectado";
+
+		switch (estado) {
+		case 0:
+			str = "Parado";
+			this.estado.setForeground(Color.RED);
+			break;
+		case 1:
+			str = "Motobomba";
+			this.estado.setForeground(Color.GREEN);
+			break;
+		case 2:
+			str = "Pressurizando";
+			this.estado.setForeground(Color.GREEN);
+			break;
+		case 3:
+			str = "Irrigando";
+			this.estado.setForeground(Color.GREEN);
+			break;
+		case 4:
+			str = "Pico energético";
+			this.estado.setForeground(Color.RED);
+			break;
+		case 5:
+			str = "ALARME ACIONADO!!!";
+			this.estado.setForeground(Color.RED);
+			break;
+		case 7:
+			str = "Horário de trabalho";
+			this.estado.setForeground(Color.RED);
+			break;
+		case 8:
+			str = "Irrigação terminada";
+			this.estado.setForeground(Color.RED);
+			break;
+		case 9:
+			str = "Pivô em movimento";
+			this.estado.setForeground(Color.GREEN);
+			break;
+		default:
+			str = "Parâmetro inválido";
+			this.estado.setForeground(Color.RED);
+		}
+
+		this.estado.setText("Estado: " + str);
 	}
 
 	public void setSetor(int setorAtual, int nrSetores) {

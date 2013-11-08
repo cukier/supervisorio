@@ -28,8 +28,11 @@ public class OpcConnII {
 	private OpcItem laminaGet;
 	private OpcItem tempoRestanteHoras;
 	private OpcItem anguloAtual;
-	private OpcItem byte4;
-	private OpcItem byte6;
+	private OpcItem word0;
+	private OpcItem word4;
+	private OpcItem word6;
+	private OpcItem statusPivo;
+	private OpcItem setorIndice;
 
 	public OpcConnII() {
 		this("localhost", "Atos.OPCConnect.1", "JOpcAtos1");
@@ -56,8 +59,11 @@ public class OpcConnII {
 		tempoRestanteHoras = new OpcItem(
 				"Equipamento1.ASYNC.tempoRestanteHoras", true, "");
 		anguloAtual = new OpcItem("Equipamento1.SYNC.anguloAtual", true, "");
-		byte4 = new OpcItem("Equipamento1.SYNC.Byte4", true, "");
-		byte6 = new OpcItem("Equipamento1.SYNC.Byte6", true, "");
+		word0 = new OpcItem("Equipamento1.SYNC.Word0", true, "");
+		word4 = new OpcItem("Equipamento1.SYNC.Word4", true, "");
+		word6 = new OpcItem("Equipamento1.SYNC.Word6", true, "");
+		statusPivo = new OpcItem("Equipamento1.ASYNC.statusPivo", true, "");
+		setorIndice = new OpcItem("Equipamento1.SYNC.setorIndice", true, "");
 
 		group = new OpcGroup("group1", true, 500, 0.0f);
 
@@ -71,8 +77,11 @@ public class OpcConnII {
 		group.addItem(laminaGet);
 		group.addItem(tempoRestanteHoras);
 		group.addItem(anguloAtual);
-		group.addItem(byte4);
-		group.addItem(byte6);
+		group.addItem(word0);
+		group.addItem(word4);
+		group.addItem(word6);
+		group.addItem(statusPivo);
+		group.addItem(setorIndice);
 
 		jopc.addGroup(group);
 
@@ -295,12 +304,12 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getbyte4() throws ComponentNotFoundException,
+	public int getword0() throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(byte4, "byte4");
+			retorno = getResponse(word0, "word0");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -310,12 +319,57 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getbyte6() throws ComponentNotFoundException,
+	public int getword4() throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(byte6, "byte6");
+			retorno = getResponse(word4, "word4");
+		} catch (ComponentNotFoundException e) {
+			throw e;
+		} catch (SynchReadException e) {
+			throw e;
+		}
+
+		return retorno;
+	}
+
+	public int getword6() throws ComponentNotFoundException,
+			SynchReadException, VariantTypeException {
+		int retorno = 0;
+
+		try {
+			retorno = getResponse(word6, "word6");
+		} catch (ComponentNotFoundException e) {
+			throw e;
+		} catch (SynchReadException e) {
+			throw e;
+		}
+
+		return retorno;
+	}
+
+	public int getstatusPivo() throws ComponentNotFoundException,
+			SynchReadException, VariantTypeException {
+		int retorno = 0;
+
+		try {
+			retorno = getResponse(statusPivo, "statusPivo");
+		} catch (ComponentNotFoundException e) {
+			throw e;
+		} catch (SynchReadException e) {
+			throw e;
+		}
+
+		return retorno;
+	}
+
+	public int getsetorIndice() throws ComponentNotFoundException,
+			SynchReadException, VariantTypeException {
+		int retorno = 0;
+
+		try {
+			retorno = getResponse(setorIndice, "setorIndice");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
