@@ -13,13 +13,13 @@
 			<dow day="sat" working="no"/>
 		</calendar>
 		<currency symbol="R$" digits="2" positiveOrder="2" negativeOrder="9"/>
-		<summary ScheduleFromStart="yes" CalculateCostProgress="no" MultipleCriticalPaths="no" CriticalSlack="0d" Name="Supervisorio" Title="Supervisorio" Work="153.2h" Duration="1d" ActualDuration="0.5292d" PercentComplete="53%" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" ActualStart="2013-11-19T08:00" ActualFinish="NA"/>
+		<summary ScheduleFromStart="yes" CalculateCostProgress="no" MultipleCriticalPaths="no" CriticalSlack="0d" Name="Supervisorio" Title="Supervisorio" Work="155.2h" Duration="1d" ActualDuration="0.5292d" PercentComplete="53%" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" ActualStart="2013-11-19T08:00" ActualFinish="NA"/>
 		<tasks>
-			<task ID="0" UniqueID="0" OutlineLevel="0" PercentComplete="53%" Name="Supervisorio" Work="153.2h" RemainingWork="153.2h" ActualDuration="0.5292d" Duration="1d" RemainingDuration="0.4708d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" ActualStart="2013-11-19T08:00" ActualFinish="NA" Critical="yes"/>
-			<task ID="1" UniqueID="1" OutlineLevel="1" PercentComplete="53%" Name="Supervis&#243;rio Pivo" Work="153.2h" RemainingWork="153.2h" ActualDuration="0.5292d" Duration="1d" RemainingDuration="0.4708d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" ActualStart="2013-11-19T08:00" Critical="yes" EffortDriven="yes" FixedCostAccrual="Prorated"/>
-			<task ID="2" UniqueID="2" OutlineLevel="2" PercentComplete="57%" Name="Frame" Work="54.1h" RemainingWork="54.1h" ActualDuration="0.5708d" Duration="1d" RemainingDuration="0.4292d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" ActualStart="2013-11-19T08:00" Critical="yes" EffortDriven="yes" FixedCostAccrual="Prorated"/>
-			<task ID="3" UniqueID="72" OutlineLevel="3" Name="Entradas / Saida" Work="8h" RemainingWork="8h" Duration="1d" RemainingDuration="1d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" ActualStart="NA" Critical="yes" EffortDriven="yes" FixedCostAccrual="Prorated"/>
-			<task ID="4" UniqueID="73" OutlineLevel="4" Name="Mostrar as entradas e saiadas do PLC" Work="4h" RemainingWork="4h" Duration="1d" RemainingDuration="1d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" Critical="yes" EffortDriven="yes" FixedCostAccrual="Prorated"/>
+			<task ID="0" UniqueID="0" OutlineLevel="0" PercentComplete="53%" Name="Supervisorio" Work="155.2h" RemainingWork="155.2h" ActualDuration="0.5292d" Duration="1d" RemainingDuration="0.4708d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" ActualStart="2013-11-19T08:00" ActualFinish="NA" Critical="yes"/>
+			<task ID="1" UniqueID="1" OutlineLevel="1" PercentComplete="53%" Name="Supervis&#243;rio Pivo" Work="155.2h" RemainingWork="155.2h" ActualDuration="0.5292d" Duration="1d" RemainingDuration="0.4708d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" ActualStart="2013-11-19T08:00" Critical="yes" EffortDriven="yes" FixedCostAccrual="Prorated"/>
+			<task ID="2" UniqueID="2" OutlineLevel="2" PercentComplete="57%" Name="Frame" Work="56.1h" RemainingWork="56.1h" ActualDuration="0.5708d" Duration="1d" RemainingDuration="0.4292d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" ActualStart="2013-11-19T08:00" Critical="yes" EffortDriven="yes" FixedCostAccrual="Prorated"/>
+			<task ID="3" UniqueID="72" OutlineLevel="3" Name="Entradas / Saida" Work="10h" RemainingWork="10h" Duration="1d" RemainingDuration="1d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" ActualStart="NA" Critical="yes" EffortDriven="yes" FixedCostAccrual="Prorated"/>
+			<task ID="4" UniqueID="73" OutlineLevel="4" Name="Mostrar as entradas e saiadas do PLC" Work="6h" RemainingWork="6h" Duration="1d" RemainingDuration="1d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" Critical="yes" EffortDriven="yes" FixedCostAccrual="Prorated"/>
 			<task ID="5" UniqueID="74" OutlineLevel="4" Name="Mostrar Variaveis Importantes do PLC" Work="4h" RemainingWork="4h" Duration="1d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" Critical="yes" EffortDriven="yes" FixedCostAccrual="Prorated"/>
 			<task ID="6" UniqueID="65" OutlineLevel="3" PercentComplete="40%" Name="Barra de Menus" Work="22.6h" RemainingWork="22.6h" ActualDuration="0.4d" Duration="1d" RemainingDuration="0.6d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" ActualStart="2013-11-19T08:00" Critical="yes" EffortDriven="yes" FixedCostAccrual="Prorated"/>
 			<task ID="7" UniqueID="66" OutlineLevel="4" PercentComplete="100%" Name="Sair" Work="0.1h" RemainingWork="0.1h" ActualDuration="1d" Duration="1d" Start="2013-11-19T08:00" Finish="2013-11-19T17:00" EarlyStart="2013-11-19T08:00" EarlyFinish="2013-11-19T17:00" LateStart="2013-11-19T08:00" LateFinish="2013-11-19T17:00" ActualStart="2013-11-19T08:00" ActualFinish="2013-11-19T17:00" EffortDriven="yes" FixedCostAccrual="Prorated"/>
@@ -516,10 +516,12 @@
 			</grid>
 <wbs_diff>
 	<treediff id="1">
-		<item conalign="yes"/>
+		<item conalign="yes">
+		</item>
 	</treediff>
 	<treediff id="4">
-		<item conalign="yes"/>
+		<item conalign="yes">
+		</item>
 	</treediff>
 </wbs_diff>
 

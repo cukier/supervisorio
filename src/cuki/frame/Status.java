@@ -17,7 +17,7 @@ public class Status extends JFrame {
 	private Oval oval = null;
 	private Mostrador most = null;
 	private AnguloAtual ang = null;
-	private EntradasSaidas plcIO = null;
+	private IO plcIO = null;
 
 	private boolean sentido = true;
 
@@ -71,7 +71,7 @@ public class Status extends JFrame {
 		menuItem = menu.add(new JMenuItem("Entradas e Saidas"));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				plcIO = new EntradasSaidas("Entradas e Saidas");
+				plcIO = new IO();
 				plcIO.setVisible(true);
 			}
 		});

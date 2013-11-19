@@ -10,7 +10,6 @@ import javafish.clients.opc.exception.UnableRemoveGroupException;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-
 import cuki.bin.OpcConnII;
 
 public class Pivo {
@@ -68,6 +67,7 @@ public class Pivo {
 			try {
 				window.frame.setword(window.con.getword0(),
 						window.con.getword4(), window.con.getword6());
+
 				window.frame.setAngulo(window.con.getanguloAtual());
 				window.frame.getMostrador().setEstado(
 						window.con.getstatusPivo());
