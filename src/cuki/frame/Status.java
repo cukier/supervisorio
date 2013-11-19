@@ -3,13 +3,16 @@ package cuki.frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.Toolkit;
+import java.io.File;
 
 @SuppressWarnings("serial")
 public class Status extends JFrame {
@@ -17,7 +20,7 @@ public class Status extends JFrame {
 	private Oval oval = null;
 	private Mostrador most = null;
 	private AnguloAtual ang = null;
-	private EntradasSaidas plcIO = null;
+	private IO plcIO = null;
 
 	private boolean sentido = true;
 
@@ -65,13 +68,29 @@ public class Status extends JFrame {
 			}
 		});
 
+		menuItem = menu.add(new JMenuItem("Carregar configuração OPC"));
+		menuItem.addActionListener(new ActionListener() {
+
+			JFileChooser fc = new JFileChooser();
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int retorno = fc.showOpenDialog(getParent());
+
+				if (retorno == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					System.out.println(file);
+				}
+			}
+		});
+
 		menu = new JMenu("Vizualizar");
 		menuBar.add(menu);
 
 		menuItem = menu.add(new JMenuItem("Entradas e Saidas"));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				plcIO = new EntradasSaidas("Entradas e Saidas");
+				plcIO = new IO();
 				plcIO.setVisible(true);
 			}
 		});
@@ -100,6 +119,5 @@ public class Status extends JFrame {
 			sentido = !sentido;
 			ang.setSentido(sentido);
 		}
-
 	}
 }

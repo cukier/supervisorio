@@ -10,13 +10,13 @@ import javafish.clients.opc.exception.UnableRemoveGroupException;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-
 import cuki.bin.OpcConnII;
 
 public class Pivo {
 
 	private Status frame;
 	private OpcConnII con;
+	private boolean emLoop;
 
 	protected void finalize() {
 		try {
@@ -46,6 +46,15 @@ public class Pivo {
 
 		window.frame.setVisible(true);
 
+	}
+
+	public Pivo() {
+		frame = new Status();
+		con = new OpcConnII();
+	}
+
+	@SuppressWarnings("unused")
+	private void inicializaConector(Pivo window) {
 		try {
 			window.con.connectAndRegister();
 		} catch (UnableAddGroupException e) {
@@ -55,7 +64,10 @@ public class Pivo {
 		} catch (ConnectivityException e) {
 			e.printStackTrace();
 		}
+	}
 
+	@SuppressWarnings("unused")
+	private void loop(Pivo window) {
 		for (;;) {
 			synchronized (window) {
 				try {
@@ -68,6 +80,7 @@ public class Pivo {
 			try {
 				window.frame.setword(window.con.getword0(),
 						window.con.getword4(), window.con.getword6());
+
 				window.frame.setAngulo(window.con.getanguloAtual());
 				window.frame.getMostrador().setEstado(
 						window.con.getstatusPivo());
@@ -91,12 +104,6 @@ public class Pivo {
 			}
 			window.frame.repaint();
 		}
-	}
-
-	public Pivo() {
-
-		frame = new Status();
-		con = new OpcConnII();
 	}
 
 }
