@@ -1,6 +1,6 @@
 package cuki;
 
-import cuki.bin.BitField;
+import cuki.utils.BitField;
 
 public class TesteBitField {
 

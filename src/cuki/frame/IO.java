@@ -7,12 +7,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.sun.imageio.plugins.common.BitFile;
-
-import cuki.bin.BitField;
+import cuki.utils.BitField;
 import net.miginfocom.swing.MigLayout;
-
 import java.awt.FlowLayout;
 
 @SuppressWarnings("serial")

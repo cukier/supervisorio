@@ -26,10 +26,8 @@ public class ServidorOPC {
 	private String[] servidores;
 	private ItensOPC[] itensPivo;
 
-	public ServidorOPC(String[] servidores) {
+	public ServidorOPC() {
 		this("localhost", "Atos.OPCConnect.1", "JOpcAtos1");
-		this.servidores = servidores;
-		itensPivo = new ItensOPC[servidores.length];
 	}
 
 	public ServidorOPC(String host, String server, String serverClientHandle) {
@@ -40,16 +38,61 @@ public class ServidorOPC {
 
 		jopc = new JOpc(this.host, this.server, this.serverClientHandle);
 		group = new OpcGroup("group1", true, 500, 0.0f);
+	}
 
-		int cont = 0;
-		for (String servidor : servidores) {
-			itensPivo[cont++] = new ItensOPC(servidor, group, jopc, servidor);
+	public String[] getServers() throws ConnectivityException,
+			UnableBrowseBranchException, UnableIBrowseException {
+
+		String[] retorno = null;
+
+		JOpcBrowser opcBrowser = new JOpcBrowser(this.host, this.server,
+				this.serverClientHandle);
+
+		try {
+			JOpcBrowser.coInitialize();
+		} catch (CoInitializeException e) {
+			throw new CoInitializeException(
+					"Falha ao buscar equipamentos de comunicação");
 		}
 
+		try {
+			opcBrowser.connect();
+		} catch (ConnectivityException e) {
+			throw new ConnectivityException(this.host + " " + this.server + " "
+					+ this.serverClientHandle);
+		}
+
+		try {
+			retorno = opcBrowser.getOpcBranch("");
+		} catch (UnableBrowseBranchException e) {
+			throw new UnableBrowseBranchException(
+					"Falha ao buscar equipamentos de comunicação (2)");
+		} catch (UnableIBrowseException e) {
+			throw new UnableIBrowseException(
+					"Falha ao buscar equipamentos de comunicação (3)");
+		}
+
+		return retorno;
 	}
 
 	public void connectAndRegister() throws ConnectivityException,
-			UnableAddGroupException, UnableAddItemException {
+			UnableAddGroupException, UnableAddItemException,
+			UnableBrowseBranchException, UnableIBrowseException {
+
+		try {
+			this.servidores = getServers();
+		} catch (UnableBrowseBranchException e) {
+			throw e;
+		} catch (UnableIBrowseException e) {
+			throw e;
+		}
+
+		itensPivo = new ItensOPC[servidores.length];
+
+		int cont = 0;
+		for (String servidor : servidores) {
+			itensPivo[cont++] = new ItensOPC(servidor, group, jopc);
+		}
 
 		JOpc.coInitialize();
 
@@ -363,38 +406,30 @@ public class ServidorOPC {
 		return retorno;
 	}
 
-	public String[] getEquipamentos() throws ConnectivityException,
-			UnableBrowseBranchException, UnableIBrowseException {
+	public static void main(String[] args) {
 
-		String[] retorno = null;
-
-		JOpcBrowser opcBrowser = new JOpcBrowser(this.host, this.server,
-				this.serverClientHandle);
+		ServidorOPC servidor = new ServidorOPC();
 
 		try {
-			JOpcBrowser.coInitialize();
-		} catch (CoInitializeException e) {
-			throw new CoInitializeException(
-					"Falha ao buscar equipamentos de comunicação");
-		}
-
-		try {
-			opcBrowser.connect();
-		} catch (ConnectivityException e) {
-			throw new ConnectivityException(this.host + " " + this.server + " "
-					+ this.serverClientHandle);
-		}
-
-		try {
-			retorno = opcBrowser.getOpcBranch("");
+			servidor.connectAndRegister();
+		} catch (UnableAddGroupException e) {
+			e.printStackTrace();
+		} catch (UnableAddItemException e) {
+			e.printStackTrace();
 		} catch (UnableBrowseBranchException e) {
-			throw new UnableBrowseBranchException(
-					"Falha ao buscar equipamentos de comunicação (2)");
+			e.printStackTrace();
 		} catch (UnableIBrowseException e) {
-			throw new UnableIBrowseException(
-					"Falha ao buscar equipamentos de comunicação (3)");
+			e.printStackTrace();
+		} catch (ConnectivityException e) {
+			e.printStackTrace();
 		}
 
-		return retorno;
+		try {
+			servidor.disconnect();
+		} catch (ComponentNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnableRemoveGroupException e) {
+			e.printStackTrace();
+		}
 	}
 }

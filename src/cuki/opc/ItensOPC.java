@@ -23,26 +23,26 @@ public class ItensOPC {
 	private OpcItem setorIndice;
 	private OpcItem tempoRestanteMinutos;
 
-	public ItensOPC(String equipamento, OpcGroup group, JOpc jopc, String pivo) {
+	public ItensOPC(String pivo, OpcGroup group, JOpc jopc) {
 
 		this.pivo = pivo;
 
-		tempoRestanteMinutos = new OpcItem(equipamento
-				+ ".ASYNC.tempoRestanteMinutos", true, "");
-		cicloAtual = new OpcItem(equipamento + ".ASYNC.cicloAtual", true, "");
-		nrSetores = new OpcItem(equipamento + ".ASYNC.nrSetores", true, "");
-		contaFase = new OpcItem(equipamento + ".ASYNC.contaFase", true, "");
-		contaSetor = new OpcItem(equipamento + ".ASYNC.contaSetor", true, "");
-		nrFases = new OpcItem(equipamento + ".ASYNC.nrFases", true, "");
-		laminaGet = new OpcItem(equipamento + ".ASYNC.laminaGet", true, "");
-		tempoRestanteHoras = new OpcItem(equipamento
-				+ ".ASYNC.tempoRestanteHoras", true, "");
-		anguloAtual = new OpcItem(equipamento + ".SYNC.anguloAtual", true, "");
-		word0 = new OpcItem(equipamento + ".SYNC.Word0", true, "");
-		word4 = new OpcItem(equipamento + ".SYNC.Word4", true, "");
-		word6 = new OpcItem(equipamento + ".SYNC.Word6", true, "");
-		statusPivo = new OpcItem(equipamento + ".ASYNC.statusPivo", true, "");
-		setorIndice = new OpcItem(equipamento + ".SYNC.setorIndice", true, "");
+		tempoRestanteMinutos = new OpcItem(
+				pivo + ".ASYNC.tempoRestanteMinutos", true, "");
+		cicloAtual = new OpcItem(pivo + ".ASYNC.cicloAtual", true, "");
+		nrSetores = new OpcItem(pivo + ".ASYNC.nrSetores", true, "");
+		contaFase = new OpcItem(pivo + ".ASYNC.contaFase", true, "");
+		contaSetor = new OpcItem(pivo + ".ASYNC.contaSetor", true, "");
+		nrFases = new OpcItem(pivo + ".ASYNC.nrFases", true, "");
+		laminaGet = new OpcItem(pivo + ".ASYNC.laminaGet", true, "");
+		tempoRestanteHoras = new OpcItem(pivo + ".ASYNC.tempoRestanteHoras",
+				true, "");
+		anguloAtual = new OpcItem(pivo + ".SYNC.anguloAtual", true, "");
+		word0 = new OpcItem(pivo + ".SYNC.Word0", true, "");
+		word4 = new OpcItem(pivo + ".SYNC.Word4", true, "");
+		word6 = new OpcItem(pivo + ".SYNC.Word6", true, "");
+		statusPivo = new OpcItem(pivo + ".ASYNC.statusPivo", true, "");
+		setorIndice = new OpcItem(pivo + ".SYNC.setorIndice", true, "");
 
 		group.addItem(tempoRestanteMinutos);
 		group.addItem(cicloAtual);
@@ -61,7 +61,7 @@ public class ItensOPC {
 
 		jopc.addGroup(group);
 
-		System.out.println(equipamento + "Itens created and added");
+		System.out.println("Itens created and added to " + pivo);
 
 	}
 
