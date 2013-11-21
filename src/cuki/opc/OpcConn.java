@@ -1,7 +1,6 @@
-package cuki.bin;
+package cuki.opc;
 
 import java.util.ArrayList;
-
 import javafish.clients.opc.JOpc;
 import javafish.clients.opc.browser.JOpcBrowser;
 import javafish.clients.opc.component.OpcGroup;
@@ -25,9 +24,6 @@ public class OpcConn {
 	private static int id = 0;
 	private JOpc jopc = null;
 	OpcGroup group = null;
-	OpcItem tempoRestanteMinutos, laminaNominal, cicloAtual, nrSetores,
-			contaFase, contaSetor, nrFases, laminaGet, tempoRestanteHoras,
-			anguloAtual, byte4, byte6;
 
 	public OpcConn(String host, String server) {
 		this.host = host;
@@ -43,31 +39,28 @@ public class OpcConn {
 		try {
 			retorno = opcBrowser.getOpcBranch(branch);
 		} catch (UnableBrowseBranchException e) {
-			e.printStackTrace();
+			throw new UnableBrowseBranchException(branch);
 		} catch (UnableIBrowseException e) {
-			e.printStackTrace();
+			throw new UnableIBrowseException(branch);
 		}
 		return retorno;
 	}
 
 	private String[] getIten(String leaf, JOpcBrowser opcBrowser)
 			throws UnableBrowseLeafException, UnableIBrowseException,
-			UnableAddGroupException, UnableAddItemException,
-			CoUninitializeException {
+			UnableAddGroupException, UnableAddItemException {
 		String[] retorno = null;
 
 		try {
 			retorno = opcBrowser.getOpcItems(leaf, true);
 		} catch (UnableBrowseLeafException e) {
-			e.printStackTrace();
+			throw new UnableBrowseLeafException(leaf);
 		} catch (UnableIBrowseException e) {
-			e.printStackTrace();
+			throw new UnableIBrowseException(leaf);
 		} catch (UnableAddGroupException e) {
-			e.printStackTrace();
+			throw new UnableAddGroupException(leaf);
 		} catch (UnableAddItemException e) {
-			e.printStackTrace();
-		} catch (CoUninitializeException e) {
-			e.printStackTrace();
+			throw new UnableAddItemException(leaf);
 		}
 
 		return retorno;
@@ -75,7 +68,8 @@ public class OpcConn {
 
 	private String[] getAllItens(String branch, String aux,
 			JOpcBrowser opcBrowser) throws UnableBrowseBranchException,
-			UnableIBrowseException, UnableAddGroupException {
+			UnableIBrowseException, UnableAddGroupException,
+			UnableBrowseLeafException, UnableAddItemException {
 
 		String[] branches = null;
 		String[] retorno = null;
@@ -83,9 +77,10 @@ public class OpcConn {
 		try {
 			branches = getBranch(branch, opcBrowser);
 		} catch (UnableBrowseBranchException e) {
-			e.printStackTrace();
+			// throw new UnableBrowseBranchException(branch);
+			System.out.println("Adicionado " + aux);
 		} catch (UnableIBrowseException e) {
-			e.printStackTrace();
+			throw new UnableIBrowseException(branch);
 		}
 
 		if (branches != null) {
@@ -96,9 +91,9 @@ public class OpcConn {
 				try {
 					otherItens = getAllItens(i, aux, opcBrowser);
 				} catch (UnableBrowseBranchException e) {
-					e.printStackTrace();
+					// throw new UnableBrowseBranchException(i);
 				} catch (UnableIBrowseException e) {
-					e.printStackTrace();
+					throw new UnableIBrowseException(i);
 				}
 				if (otherItens != null) {
 					// if (otherItens != null && otherItens[0].contains(";")) {
@@ -116,29 +111,28 @@ public class OpcConn {
 			pool.toArray(retorno);
 		} else if (!branch.equals("Read Error")
 				&& !branch.equals("Configured Aliases")) {
+			String leafPath = "";
 			try {
-				String leafPath = (aux != "") ? aux + "." + branch : branch;
+				leafPath = (aux != "") ? aux + "." + branch : branch;
 				retorno = getIten(leafPath, opcBrowser);
 			} catch (UnableBrowseLeafException e) {
-				e.printStackTrace();
+				throw new UnableBrowseLeafException(leafPath);
 			} catch (UnableIBrowseException e) {
-				e.printStackTrace();
+				throw new UnableIBrowseException(leafPath);
 			} catch (UnableAddGroupException e) {
-				e.printStackTrace();
+				throw new UnableAddGroupException(leafPath);
 			} catch (UnableAddItemException e) {
-				e.printStackTrace();
+				throw new UnableAddItemException(leafPath);
 			}
 		}
 		return retorno;
 	}
 
-	public void registerAllItens() throws CoInitializeException,
-			ConnectivityException, UnableBrowseBranchException,
-			UnableIBrowseException, UnableAddGroupException,
+	public void registerAllItens() throws ConnectivityException,
+			UnableBrowseBranchException, UnableIBrowseException,
+			UnableAddGroupException, UnableBrowseLeafException,
 			UnableAddItemException {
 
-		// String[] itens = { "Equipamento1.anguloAtual", "Equipamento1.Byte4",
-		// "Equipamento1.Byte6" };
 		String[] itens = null;
 		JOpcBrowser opcBrowser = new JOpcBrowser(this.host, this.server,
 				this.serverClientHandle);
@@ -146,33 +140,49 @@ public class OpcConn {
 		try {
 			JOpcBrowser.coInitialize();
 		} catch (CoInitializeException e) {
-			e.printStackTrace();
+			throw new CoInitializeException(this.host + " " + this.server + " "
+					+ this.serverClientHandle);
 		}
 
 		try {
 			opcBrowser.connect();
 		} catch (ConnectivityException e) {
-			e.printStackTrace();
+			throw new ConnectivityException(this.host + " " + this.server + " "
+					+ this.serverClientHandle);
 		}
 
 		try {
-			// getAllItens("", null, opcBrowser);
 			itens = getAllItens("", null, opcBrowser);
 		} catch (UnableBrowseBranchException e) {
-			e.printStackTrace();
+			throw new UnableBrowseBranchException(this.host + " " + this.server
+					+ " " + this.serverClientHandle);
 		} catch (UnableIBrowseException e) {
-			e.printStackTrace();
+			throw new UnableIBrowseException(this.host + " " + this.server
+					+ " " + this.serverClientHandle);
 		} catch (UnableAddGroupException e) {
-			e.printStackTrace();
+			throw new UnableAddGroupException(this.host + " " + this.server
+					+ " " + this.serverClientHandle);
+		} catch (UnableBrowseLeafException e) {
+			throw new UnableBrowseLeafException(this.host + " " + this.server
+					+ " " + this.serverClientHandle);
+		} catch (UnableAddItemException e) {
+			throw new UnableAddItemException(this.host + " " + this.server
+					+ " " + this.serverClientHandle);
 		}
 
-		JOpcBrowser.coUninitialize();
+		try {
+			JOpcBrowser.coUninitialize();
+		} catch (CoUninitializeException e) {
+			throw new CoUninitializeException(this.host + " " + this.server
+					+ " " + this.serverClientHandle);
+		}
 		opcBrowser = null;
 
 		try {
 			JOpc.coInitialize();
-		} catch (CoInitializeException e1) {
-			e1.printStackTrace();
+		} catch (CoInitializeException e) {
+			throw new CoInitializeException(this.host + " " + this.server + " "
+					+ this.serverClientHandle);
 		}
 
 		jopc = new JOpc(this.host, this.server, this.serverClientHandle);
@@ -184,21 +194,11 @@ public class OpcConn {
 
 		jopc.addGroup(group);
 
-		try {
-			jopc.connect();
-			System.out.println("JOPC client is connected...");
-		} catch (ConnectivityException e2) {
-			e2.printStackTrace();
-		}
+		jopc.connect();
+		System.out.println("JOPC client is connected...");
 
-		try {
-			jopc.registerGroups();
-			System.out.println("OPCGroup are registered...");
-		} catch (UnableAddGroupException e2) {
-			e2.printStackTrace();
-		} catch (UnableAddItemException e2) {
-			e2.printStackTrace();
-		}
+		jopc.registerGroups();
+		System.out.println("OPCGroup are registered...");
 	}
 
 	public OpcGroup synchResponse() throws ComponentNotFoundException,
@@ -209,10 +209,10 @@ public class OpcConn {
 		try {
 			responseGroup = jopc.synchReadGroup(group);
 			// System.out.println(responseGroup);
-		} catch (ComponentNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (SynchReadException e1) {
-			e1.printStackTrace();
+		} catch (ComponentNotFoundException e) {
+			throw new ComponentNotFoundException(group.toString());
+		} catch (SynchReadException e) {
+			throw new SynchReadException(group.toString());
 		}
 
 		return responseGroup;
@@ -221,5 +221,28 @@ public class OpcConn {
 	public void disconn() {
 		JOpc.coUninitialize();
 		jopc = null;
+	}
+
+	public String[] getEquipamentos() {
+		ArrayList<String> array = new ArrayList<String>();
+
+		int cont = 0;
+		for (String aux : group.toString().split("itemName = ")) {
+			int cont2 = 0;
+			for (String aux2 : aux.split(";")) {
+				if (cont > 0 && cont2 == 0) {
+					if (array.isEmpty()
+							|| !aux2.split("\\.")[0].equals(array.get(array
+									.size() - 1))) {
+						array.add(aux2.split("\\.")[0]);
+					}
+				}
+				cont2++;
+			}
+			cont++;
+		}
+		String[] retorno = new String[array.size()];
+		array.toArray(retorno);
+		return retorno;
 	}
 }

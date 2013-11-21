@@ -1,4 +1,4 @@
-package cuki.bin;
+package cuki.utils;
 
 public class BitField {
 

@@ -1,4 +1,4 @@
-package cuki.frame;
+package cuki.bin;
 
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
@@ -10,12 +10,13 @@ import javafish.clients.opc.exception.UnableRemoveGroupException;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import cuki.bin.OpcConnII;
+import cuki.frame.Status;
+import cuki.opc.ServidorOPC;
 
 public class Pivo {
 
 	private Status frame;
-	private OpcConnII con;
+	private ServidorOPC con;
 	private boolean emLoop;
 
 	protected void finalize() {
@@ -50,7 +51,7 @@ public class Pivo {
 
 	public Pivo() {
 		frame = new Status();
-		con = new OpcConnII();
+		con = new ServidorOPC();
 	}
 
 	@SuppressWarnings("unused")

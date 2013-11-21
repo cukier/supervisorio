@@ -7,7 +7,7 @@ import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
 import javafish.clients.opc.exception.UnableRemoveGroupException;
 import javafish.clients.opc.exception.VariantTypeException;
-import cuki.bin.OpcConnII;
+import cuki.opc.ServidorOPC;
 
 public class TesteOpcConnII {
 
@@ -24,12 +24,12 @@ public class TesteOpcConnII {
 	private static int word6;
 	private static int anguloAtual;
 	private int minutos = 5;
-	private OpcConnII con = null;
+	private ServidorOPC con = null;
 
 	public TesteOpcConnII(int minutos) {
 		this.minutos = minutos;
 		System.out.println("Aguardando " + this.minutos + " minutos");
-		con = new OpcConnII();
+		con = new ServidorOPC();
 	}
 
 	protected void finalize() {

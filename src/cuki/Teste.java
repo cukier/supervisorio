@@ -1,16 +1,18 @@
 package cuki;
 
+import java.util.Arrays;
+
 import javafish.clients.opc.component.OpcGroup;
 import javafish.clients.opc.component.OpcItem;
-import javafish.clients.opc.exception.CoInitializeException;
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
 import javafish.clients.opc.exception.SynchReadException;
 import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
 import javafish.clients.opc.exception.UnableBrowseBranchException;
+import javafish.clients.opc.exception.UnableBrowseLeafException;
 import javafish.clients.opc.exception.UnableIBrowseException;
-import cuki.bin.OpcConn;
+import cuki.opc.OpcConn;
 
 public class Teste {
 
@@ -25,23 +27,38 @@ public class Teste {
 
 		try {
 			con1.registerAllItens();
-		} catch (CoInitializeException e1) {
-			e1.printStackTrace();
-		} catch (UnableBrowseBranchException e1) {
-			e1.printStackTrace();
-		} catch (UnableIBrowseException e1) {
-			e1.printStackTrace();
-		} catch (UnableAddGroupException e1) {
-			e1.printStackTrace();
-		} catch (UnableAddItemException e1) {
-			e1.printStackTrace();
-		} catch (ConnectivityException e1) {
-			e1.printStackTrace();
+		} catch (UnableBrowseBranchException e2) {
+			e2.printStackTrace();
+		} catch (UnableIBrowseException e2) {
+			e2.printStackTrace();
+		} catch (UnableAddGroupException e2) {
+			e2.printStackTrace();
+		} catch (UnableBrowseLeafException e2) {
+			e2.printStackTrace();
+		} catch (UnableAddItemException e2) {
+			e2.printStackTrace();
+		} catch (ConnectivityException e2) {
+			e2.printStackTrace();
 		}
 
+		String[] equipamentos = con1.getEquipamentos();
+
+		System.out.println(Arrays.asList(equipamentos));
+		System.out.println(equipamentos.length);
+
+		// loop(test, group, con1);
+
+		con1.disconn();
+	}
+
+	private static void loop(Object test, OpcGroup group, OpcConn con1) {
 		for (int i = 0; i < 100; i++) {
 			synchronized (test) {
-				test.wait(1000);
+				try {
+					test.wait(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 			try {
 				group = con1.synchResponse();
@@ -100,6 +117,5 @@ public class Teste {
 				System.out.println("");
 			}
 		}
-		con1.disconn();
 	}
 }

@@ -1,91 +1,50 @@
-package cuki.bin;
+package cuki.opc;
 
 import javafish.clients.opc.JOpc;
+import javafish.clients.opc.browser.JOpcBrowser;
 import javafish.clients.opc.component.OpcGroup;
 import javafish.clients.opc.component.OpcItem;
+import javafish.clients.opc.exception.CoInitializeException;
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
 import javafish.clients.opc.exception.SynchReadException;
 import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
+import javafish.clients.opc.exception.UnableBrowseBranchException;
+import javafish.clients.opc.exception.UnableIBrowseException;
 import javafish.clients.opc.exception.UnableRemoveGroupException;
 import javafish.clients.opc.exception.VariantTypeException;
+import cuki.opc.ItensOPC;
 
-public class OpcConnII {
+public class ServidorOPC {
 
 	private String serverClientHandle;
 	private String host;
 	private String server;
 	private JOpc jopc;
 	private OpcGroup group;
-	private OpcItem tempoRestanteMinutos;
-	// private OpcItem laminaNominal;
-	private OpcItem cicloAtual;
-	private OpcItem nrSetores;
-	private OpcItem contaFase;
-	private OpcItem contaSetor;
-	private OpcItem nrFases;
-	private OpcItem laminaGet;
-	private OpcItem tempoRestanteHoras;
-	private OpcItem anguloAtual;
-	private OpcItem word0;
-	private OpcItem word4;
-	private OpcItem word6;
-	private OpcItem statusPivo;
-	private OpcItem setorIndice;
+	private String[] servidores;
+	private ItensOPC[] itensPivo;
 
-	public OpcConnII() {
+	public ServidorOPC(String[] servidores) {
 		this("localhost", "Atos.OPCConnect.1", "JOpcAtos1");
+		this.servidores = servidores;
+		itensPivo = new ItensOPC[servidores.length];
 	}
 
-	public OpcConnII(String host, String server, String serverClientHandle) {
+	public ServidorOPC(String host, String server, String serverClientHandle) {
 
 		this.host = host;
 		this.server = server;
 		this.serverClientHandle = serverClientHandle;
 
 		jopc = new JOpc(this.host, this.server, this.serverClientHandle);
-
-		tempoRestanteMinutos = new OpcItem(
-				"Equipamento1.ASYNC.tempoRestanteMinutos", true, "");
-		// laminaNominal = new OpcItem("Equipamento1.ASYNC.laminaNominal", true,
-		// "");
-		cicloAtual = new OpcItem("Equipamento1.ASYNC.cicloAtual", true, "");
-		nrSetores = new OpcItem("Equipamento1.ASYNC.nrSetores", true, "");
-		contaFase = new OpcItem("Equipamento1.ASYNC.contaFase", true, "");
-		contaSetor = new OpcItem("Equipamento1.ASYNC.contaSetor", true, "");
-		nrFases = new OpcItem("Equipamento1.ASYNC.nrFases", true, "");
-		laminaGet = new OpcItem("Equipamento1.ASYNC.laminaGet", true, "");
-		tempoRestanteHoras = new OpcItem(
-				"Equipamento1.ASYNC.tempoRestanteHoras", true, "");
-		anguloAtual = new OpcItem("Equipamento1.SYNC.anguloAtual", true, "");
-		word0 = new OpcItem("Equipamento1.SYNC.Word0", true, "");
-		word4 = new OpcItem("Equipamento1.SYNC.Word4", true, "");
-		word6 = new OpcItem("Equipamento1.SYNC.Word6", true, "");
-		statusPivo = new OpcItem("Equipamento1.ASYNC.statusPivo", true, "");
-		setorIndice = new OpcItem("Equipamento1.SYNC.setorIndice", true, "");
-
 		group = new OpcGroup("group1", true, 500, 0.0f);
 
-		group.addItem(tempoRestanteMinutos);
-		// group.addItem(laminaNominal);
-		group.addItem(cicloAtual);
-		group.addItem(nrSetores);
-		group.addItem(contaFase);
-		group.addItem(contaSetor);
-		group.addItem(nrFases);
-		group.addItem(laminaGet);
-		group.addItem(tempoRestanteHoras);
-		group.addItem(anguloAtual);
-		group.addItem(word0);
-		group.addItem(word4);
-		group.addItem(word6);
-		group.addItem(statusPivo);
-		group.addItem(setorIndice);
-
-		jopc.addGroup(group);
-
-		System.out.println("Itens created and added");
+		int cont = 0;
+		for (String servidor : servidores) {
+			itensPivo[cont++] = new ItensOPC(servidor, group, jopc, servidor);
+		}
 
 	}
 
@@ -169,12 +128,25 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getTempoRestanteMinutos() throws ComponentNotFoundException,
-			SynchReadException {
+	private int indice(String pivo) {
+		int cont = 0;
+		for (ItensOPC item : itensPivo) {
+			if (pivo.equals(item.getPivo()))
+				break;
+			else
+				cont++;
+		}
+		return cont;
+	}
+
+	public int getTempoRestanteMinutos(String pivo)
+			throws ComponentNotFoundException, SynchReadException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(tempoRestanteMinutos, "tempoRestanteMinutos");
+			retorno = getResponse(
+					itensPivo[indice(pivo)].getTempoRestanteMinutos(),
+					"tempoRestanteMinutos");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -184,12 +156,13 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getanguloAtual() throws ComponentNotFoundException,
+	public int getanguloAtual(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(anguloAtual, "anguloAtual");
+			retorno = getResponse(itensPivo[indice(pivo)].getAnguloAtual(),
+					"anguloAtual");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -199,12 +172,13 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getcicloAtuall() throws ComponentNotFoundException,
+	public int getcicloAtual(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(cicloAtual, "cicloAtual");
+			retorno = getResponse(itensPivo[indice(pivo)].getCicloAtual(),
+					"cicloAtual");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -214,12 +188,13 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getnrSetores() throws ComponentNotFoundException,
+	public int getnrSetores(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(nrSetores, "nrSetores");
+			retorno = getResponse(itensPivo[indice(pivo)].getNrSetores(),
+					"nrSetores");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -229,12 +204,13 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getcontaFase() throws ComponentNotFoundException,
+	public int getcontaFase(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(contaFase, "contaFase");
+			retorno = getResponse(itensPivo[indice(pivo)].getContaFase(),
+					"contaFase");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -244,12 +220,13 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getcontaSetor() throws ComponentNotFoundException,
+	public int getcontaSetor(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(contaSetor, "contaSetor");
+			retorno = getResponse(itensPivo[indice(pivo)].getContaSetor(),
+					"contaSetor");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -259,12 +236,13 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getnrFases() throws ComponentNotFoundException,
+	public int getnrFases(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(nrFases, "nrFases");
+			retorno = getResponse(itensPivo[indice(pivo)].getNrFases(),
+					"nrFases");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -274,12 +252,13 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getlaminaGet() throws ComponentNotFoundException,
+	public int getlaminaGet(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(laminaGet, "laminaGet");
+			retorno = getResponse(itensPivo[indice(pivo)].getLaminaGet(),
+					"laminaGet");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -289,12 +268,15 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int gettempoRestanteHoras() throws ComponentNotFoundException,
-			SynchReadException, VariantTypeException {
+	public int gettempoRestanteHoras(String pivo)
+			throws ComponentNotFoundException, SynchReadException,
+			VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(tempoRestanteHoras, "tempoRestanteHoras");
+			retorno = getResponse(
+					itensPivo[indice(pivo)].getTempoRestanteHoras(),
+					"tempoRestanteHoras");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -304,12 +286,12 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getword0() throws ComponentNotFoundException,
+	public int getword0(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(word0, "word0");
+			retorno = getResponse(itensPivo[indice(pivo)].getWord0(), "word0");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -319,12 +301,12 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getword4() throws ComponentNotFoundException,
+	public int getword4(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(word4, "word4");
+			retorno = getResponse(itensPivo[indice(pivo)].getWord4(), "word4");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -334,12 +316,12 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getword6() throws ComponentNotFoundException,
+	public int getword6(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(word6, "word6");
+			retorno = getResponse(itensPivo[indice(pivo)].getWord6(), "word6");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -349,12 +331,13 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getstatusPivo() throws ComponentNotFoundException,
+	public int getstatusPivo(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(statusPivo, "statusPivo");
+			retorno = getResponse(itensPivo[indice(pivo)].getStatusPivo(),
+					"statusPivo");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
@@ -364,16 +347,52 @@ public class OpcConnII {
 		return retorno;
 	}
 
-	public int getsetorIndice() throws ComponentNotFoundException,
+	public int getsetorIndice(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
 		int retorno = 0;
 
 		try {
-			retorno = getResponse(setorIndice, "setorIndice");
+			retorno = getResponse(itensPivo[indice(pivo)].getSetorIndice(),
+					"setorIndice");
 		} catch (ComponentNotFoundException e) {
 			throw e;
 		} catch (SynchReadException e) {
 			throw e;
+		}
+
+		return retorno;
+	}
+
+	public String[] getEquipamentos() throws ConnectivityException,
+			UnableBrowseBranchException, UnableIBrowseException {
+
+		String[] retorno = null;
+
+		JOpcBrowser opcBrowser = new JOpcBrowser(this.host, this.server,
+				this.serverClientHandle);
+
+		try {
+			JOpcBrowser.coInitialize();
+		} catch (CoInitializeException e) {
+			throw new CoInitializeException(
+					"Falha ao buscar equipamentos de comunicação");
+		}
+
+		try {
+			opcBrowser.connect();
+		} catch (ConnectivityException e) {
+			throw new ConnectivityException(this.host + " " + this.server + " "
+					+ this.serverClientHandle);
+		}
+
+		try {
+			retorno = opcBrowser.getOpcBranch("");
+		} catch (UnableBrowseBranchException e) {
+			throw new UnableBrowseBranchException(
+					"Falha ao buscar equipamentos de comunicação (2)");
+		} catch (UnableIBrowseException e) {
+			throw new UnableIBrowseException(
+					"Falha ao buscar equipamentos de comunicação (3)");
 		}
 
 		return retorno;
