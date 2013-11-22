@@ -1,7 +1,7 @@
 package cuki.opc;
 
-import javafish.clients.opc.JOpc;
-import javafish.clients.opc.component.OpcGroup;
+import java.util.ArrayList;
+
 import javafish.clients.opc.component.OpcItem;
 
 public class ItensOPC {
@@ -23,46 +23,81 @@ public class ItensOPC {
 	private OpcItem setorIndice;
 	private OpcItem tempoRestanteMinutos;
 
-	public ItensOPC(String pivo, OpcGroup group, JOpc jopc) {
-
+	public ItensOPC(String pivo) {
 		this.pivo = pivo;
+	}
+
+	/*
+	 * public ItensOPC(String pivo, OpcGroup group, JOpc jopc) {
+	 * 
+	 * this.pivo = pivo;
+	 * 
+	 * tempoRestanteMinutos = new OpcItem( pivo + ".ASYNC.tempoRestanteMinutos",
+	 * true, ""); cicloAtual = new OpcItem(pivo + ".ASYNC.cicloAtual", true,
+	 * ""); nrSetores = new OpcItem(pivo + ".ASYNC.nrSetores", true, "");
+	 * contaFase = new OpcItem(pivo + ".ASYNC.contaFase", true, ""); contaSetor
+	 * = new OpcItem(pivo + ".ASYNC.contaSetor", true, ""); nrFases = new
+	 * OpcItem(pivo + ".ASYNC.nrFases", true, ""); laminaGet = new OpcItem(pivo
+	 * + ".ASYNC.laminaGet", true, ""); tempoRestanteHoras = new OpcItem(pivo +
+	 * ".ASYNC.tempoRestanteHoras", true, ""); anguloAtual = new OpcItem(pivo +
+	 * ".SYNC.anguloAtual", true, ""); word0 = new OpcItem(pivo + ".SYNC.Word0",
+	 * true, ""); word4 = new OpcItem(pivo + ".SYNC.Word4", true, ""); word6 =
+	 * new OpcItem(pivo + ".SYNC.Word6", true, ""); statusPivo = new
+	 * OpcItem(pivo + ".ASYNC.statusPivo", true, ""); setorIndice = new
+	 * OpcItem(pivo + ".SYNC.setorIndice", true, "");
+	 * 
+	 * group.addItem(tempoRestanteMinutos); group.addItem(cicloAtual);
+	 * group.addItem(nrSetores); group.addItem(contaFase);
+	 * group.addItem(contaSetor); group.addItem(nrFases);
+	 * group.addItem(laminaGet); group.addItem(tempoRestanteHoras);
+	 * group.addItem(anguloAtual); group.addItem(word0); group.addItem(word4);
+	 * group.addItem(word6); group.addItem(statusPivo);
+	 * group.addItem(setorIndice);
+	 * 
+	 * System.out.println("Itens created and added to " + pivo);
+	 * 
+	 * }
+	 */
+
+	public OpcItem[] createItens(String pivo) {
+
+		ArrayList<OpcItem> array = new ArrayList<OpcItem>(14);
 
 		tempoRestanteMinutos = new OpcItem(
 				pivo + ".ASYNC.tempoRestanteMinutos", true, "");
+		array.add(tempoRestanteMinutos);
 		cicloAtual = new OpcItem(pivo + ".ASYNC.cicloAtual", true, "");
+		array.add(cicloAtual);
 		nrSetores = new OpcItem(pivo + ".ASYNC.nrSetores", true, "");
+		array.add(nrSetores);
 		contaFase = new OpcItem(pivo + ".ASYNC.contaFase", true, "");
+		array.add(contaFase);
 		contaSetor = new OpcItem(pivo + ".ASYNC.contaSetor", true, "");
+		array.add(contaSetor);
 		nrFases = new OpcItem(pivo + ".ASYNC.nrFases", true, "");
+		array.add(nrFases);
 		laminaGet = new OpcItem(pivo + ".ASYNC.laminaGet", true, "");
+		array.add(laminaGet);
 		tempoRestanteHoras = new OpcItem(pivo + ".ASYNC.tempoRestanteHoras",
 				true, "");
+		array.add(tempoRestanteHoras);
 		anguloAtual = new OpcItem(pivo + ".SYNC.anguloAtual", true, "");
+		array.add(anguloAtual);
 		word0 = new OpcItem(pivo + ".SYNC.Word0", true, "");
+		array.add(word0);
 		word4 = new OpcItem(pivo + ".SYNC.Word4", true, "");
+		array.add(word4);
 		word6 = new OpcItem(pivo + ".SYNC.Word6", true, "");
+		array.add(word6);
 		statusPivo = new OpcItem(pivo + ".ASYNC.statusPivo", true, "");
+		array.add(statusPivo);
 		setorIndice = new OpcItem(pivo + ".SYNC.setorIndice", true, "");
+		array.add(setorIndice);
 
-		group.addItem(tempoRestanteMinutos);
-		group.addItem(cicloAtual);
-		group.addItem(nrSetores);
-		group.addItem(contaFase);
-		group.addItem(contaSetor);
-		group.addItem(nrFases);
-		group.addItem(laminaGet);
-		group.addItem(tempoRestanteHoras);
-		group.addItem(anguloAtual);
-		group.addItem(word0);
-		group.addItem(word4);
-		group.addItem(word6);
-		group.addItem(statusPivo);
-		group.addItem(setorIndice);
+		OpcItem[] retorno = new OpcItem[array.size()];
+		array.toArray(retorno);
 
-		jopc.addGroup(group);
-
-		System.out.println("Itens created and added to " + pivo);
-
+		return retorno;
 	}
 
 	public String getPivo() {

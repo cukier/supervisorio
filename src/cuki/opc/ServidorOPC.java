@@ -90,9 +90,18 @@ public class ServidorOPC {
 		itensPivo = new ItensOPC[servidores.length];
 
 		int cont = 0;
+		// for (String servidor : servidores) {
+		// itensPivo[cont++] = new ItensOPC(servidor, group, jopc);
+		// }
+
 		for (String servidor : servidores) {
-			itensPivo[cont++] = new ItensOPC(servidor, group, jopc);
+
+			itensPivo[cont] = new ItensOPC(servidor);
+
+			for (OpcItem item : itensPivo[cont++].createItens(servidor))
+				group.addItem(item);
 		}
+		jopc.addGroup(group);
 
 		JOpc.coInitialize();
 
