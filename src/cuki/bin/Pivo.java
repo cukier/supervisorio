@@ -2,26 +2,27 @@ package cuki.bin;
 
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
-import javafish.clients.opc.exception.SynchReadException;
 import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
+import javafish.clients.opc.exception.UnableBrowseBranchException;
+import javafish.clients.opc.exception.UnableIBrowseException;
 import javafish.clients.opc.exception.UnableRemoveGroupException;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import cuki.frame.Status;
+import cuki.exception.NoPivotFoundException;
+import cuki.frame.Selecionador;
 import cuki.opc.ServidorOPC;
 
 public class Pivo {
 
-	private Status frame;
-	private ServidorOPC con;
-	private boolean emLoop;
+	private Selecionador selecionador;
+	private ServidorOPC conn;
 
 	protected void finalize() {
 		try {
-			con.disconnect();
+			conn.disconnect();
 		} catch (ComponentNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnableRemoveGroupException e) {
@@ -29,9 +30,18 @@ public class Pivo {
 		}
 	}
 
-	public static void main(String[] args) {
+	/**
+	 * @wbp.parser.entryPoint
+	 */
+	public static void main(String[] args) throws NoPivotFoundException {
 
-		Pivo window = new Pivo();
+		Pivo window;
+
+		try {
+			window = new Pivo();
+		} catch (NoPivotFoundException e1) {
+			throw e1;
+		}
 
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -41,70 +51,39 @@ public class Pivo {
 				}
 			}
 		} catch (Exception e) {
-			// If Nimbus is not available, you can set the GUI to another look
-			// and feel.
 		}
 
-		window.frame.setVisible(true);
+		window.selecionador.setVisible(true);
 
 	}
 
-	public Pivo() {
-		frame = new Status();
-		con = new ServidorOPC();
-	}
+	public Pivo() throws NoPivotFoundException {
 
-	@SuppressWarnings("unused")
-	private void inicializaConector(Pivo window) {
+		conn = new ServidorOPC();
+
 		try {
-			window.con.connectAndRegister();
+			conn.connectAndRegister();
 		} catch (UnableAddGroupException e) {
 			e.printStackTrace();
 		} catch (UnableAddItemException e) {
 			e.printStackTrace();
+		} catch (UnableBrowseBranchException e) {
+			e.printStackTrace();
+		} catch (UnableIBrowseException e) {
+			e.printStackTrace();
 		} catch (ConnectivityException e) {
 			e.printStackTrace();
 		}
-	}
 
-	@SuppressWarnings("unused")
-	private void loop(Pivo window) {
-		for (;;) {
-			synchronized (window) {
-				try {
-					window.wait(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+		String[] servidores = conn.getServidores();
 
-			try {
-				window.frame.setword(window.con.getword0(),
-						window.con.getword4(), window.con.getword6());
-
-				window.frame.setAngulo(window.con.getanguloAtual());
-				window.frame.getMostrador().setEstado(
-						window.con.getstatusPivo());
-				window.frame.getMostrador().setSetor(
-						window.con.getcontaSetor(), window.con.getnrSetores());
-				window.frame.getMostrador().setFase(window.con.getcontaFase(),
-						window.con.getnrFases());
-				window.frame.getMostrador().setBruta(window.con.getlaminaGet());
-				window.frame.getMostrador().setDuracao(
-						window.con.gettempoRestanteHoras(),
-						window.con.getTempoRestanteMinutos());
-				window.frame.getMostrador().setCiclo(
-						window.con.getcicloAtuall());
-				System.out.println(window.con.getsetorIndice());
-			} catch (ComponentNotFoundException e) {
-				e.printStackTrace();
-			} catch (SynchReadException e) {
-				e.printStackTrace();
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-			}
-			window.frame.repaint();
+		if (servidores.length > 0) {
+			selecionador = new Selecionador(servidores);
+		} else {
+			System.out
+					.println("Não foi encontrando nenhum pivo. Foi o servidor da ATOS instalado?");
+			throw new NoPivotFoundException("");
 		}
-	}
 
+	}
 }
