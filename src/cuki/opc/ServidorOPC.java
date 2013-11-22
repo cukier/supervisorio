@@ -40,7 +40,7 @@ public class ServidorOPC {
 		group = new OpcGroup("group1", true, 500, 0.0f);
 	}
 
-	public String[] getServers() throws ConnectivityException,
+	private String[] getServers() throws ConnectivityException,
 			UnableBrowseBranchException, UnableIBrowseException {
 
 		String[] retorno = null;
@@ -120,6 +120,10 @@ public class ServidorOPC {
 		} catch (UnableAddItemException e) {
 			throw new UnableAddItemException("No item added!");
 		}
+	}
+
+	public String[] getServidores() {
+		return this.servidores;
 	}
 
 	public void disconnect() throws ComponentNotFoundException,
@@ -415,30 +419,11 @@ public class ServidorOPC {
 		return retorno;
 	}
 
-	public static void main(String[] args) {
+	public OpcGroup getGroup() {
+		return this.group;
+	}
 
-		ServidorOPC servidor = new ServidorOPC();
-
-		try {
-			servidor.connectAndRegister();
-		} catch (UnableAddGroupException e) {
-			e.printStackTrace();
-		} catch (UnableAddItemException e) {
-			e.printStackTrace();
-		} catch (UnableBrowseBranchException e) {
-			e.printStackTrace();
-		} catch (UnableIBrowseException e) {
-			e.printStackTrace();
-		} catch (ConnectivityException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			servidor.disconnect();
-		} catch (ComponentNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnableRemoveGroupException e) {
-			e.printStackTrace();
-		}
+	public JOpc getJOpc() {
+		return this.jopc;
 	}
 }
