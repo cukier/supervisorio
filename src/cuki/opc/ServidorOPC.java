@@ -5,6 +5,7 @@ import javafish.clients.opc.browser.JOpcBrowser;
 import javafish.clients.opc.component.OpcGroup;
 import javafish.clients.opc.component.OpcItem;
 import javafish.clients.opc.exception.CoInitializeException;
+import javafish.clients.opc.exception.CoUninitializeException;
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
 import javafish.clients.opc.exception.SynchReadException;
@@ -41,7 +42,8 @@ public class ServidorOPC {
 	}
 
 	private String[] getServers() throws ConnectivityException,
-			UnableBrowseBranchException, UnableIBrowseException {
+			UnableBrowseBranchException, UnableIBrowseException,
+			CoUninitializeException {
 
 		String[] retorno = null;
 
@@ -72,18 +74,27 @@ public class ServidorOPC {
 					"Falha ao buscar equipamentos de comunicação (3)");
 		}
 
+		try {
+			JOpcBrowser.coUninitialize();
+		} catch (CoUninitializeException e) {
+			throw new CoUninitializeException("Falha ao encerrar OPC Browser");
+		}
+
 		return retorno;
 	}
 
 	public void connectAndRegister() throws ConnectivityException,
 			UnableAddGroupException, UnableAddItemException,
-			UnableBrowseBranchException, UnableIBrowseException {
+			UnableBrowseBranchException, UnableIBrowseException,
+			CoUninitializeException {
 
 		try {
 			this.servidores = getServers();
 		} catch (UnableBrowseBranchException e) {
 			throw e;
 		} catch (UnableIBrowseException e) {
+			throw e;
+		} catch (CoUninitializeException e) {
 			throw e;
 		}
 
@@ -101,6 +112,7 @@ public class ServidorOPC {
 			for (OpcItem item : itensPivo[cont++].createItens(servidor))
 				group.addItem(item);
 		}
+
 		jopc.addGroup(group);
 
 		JOpc.coInitialize();

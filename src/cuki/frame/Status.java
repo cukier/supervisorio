@@ -2,6 +2,8 @@ package cuki.frame;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -21,15 +23,18 @@ public class Status extends JFrame {
 	private Mostrador most = null;
 	private AnguloAtual ang = null;
 	private IO plcIO = null;
-
+	private static int cont = -1;
+	private String pivo;
 	private boolean sentido = true;
 
-	public Status() {
+	public Status(String pivo) {
+		cont++;
+		this.pivo = pivo;
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
 				Status.class.getResource("/cuki/frame/images/logo-K.png")));
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setTitle("Teste Supervisorio");
 		setResizable(false);
 
@@ -48,6 +53,15 @@ public class Status extends JFrame {
 		ang = new AnguloAtual();
 		getContentPane().add(ang, "cell 0 2,grow");
 		ang.getBto().addActionListener(new MudarSentido());
+
+		setTitle(pivo);
+
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent evt) {
+				cont--;
+				dispose();
+			}
+		});
 
 		pack();
 
@@ -119,5 +133,13 @@ public class Status extends JFrame {
 			sentido = !sentido;
 			ang.setSentido(sentido);
 		}
+	}
+
+	public int getCont() {
+		return Status.cont;
+	}
+
+	public String getPivoName() {
+		return this.pivo;
 	}
 }
