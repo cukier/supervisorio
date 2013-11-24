@@ -72,15 +72,18 @@ public class Selecionador extends JFrame {
 					status.setVisible(true);
 					break;
 				} else {
-					Status statusPivo = new Status(pivo);
-					statusPivo.setLocation(getWidth(), statusPivo.getCont()
-							* statusPivo.getHeight());
-					listaStatusPivo[cont++] = statusPivo;
-					statusPivo.setVisible(true);
+					if (status != null && status.getPivoName().equals(pivo))
+						status.setVisible(true);
+					else {
+						Status statusPivo = new Status(pivo);
+						statusPivo.setLocation(getWidth(), statusPivo.getCont()
+								* statusPivo.getHeight());
+						listaStatusPivo[cont++] = statusPivo;
+						statusPivo.setVisible(true);
+					}
 				}
 			}
 		}
-
 	}
 
 	public boolean isFinalizarPrograma() {
