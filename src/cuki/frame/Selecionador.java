@@ -68,8 +68,8 @@ public class Selecionador extends JFrame {
 			for (Status status : listaStatusPivo) {
 				if (status == null) {
 					Status statusPivo = new Status(pivo);
-					statusPivo.setLocation(getWidth(), statusPivo.getCont()
-							* statusPivo.getHeight());
+					statusPivo.setLocation(getWidth() + statusPivo.getCont()
+							* 30, statusPivo.getCont() * 30);
 					listaStatusPivo[cont++] = statusPivo;
 					statusPivo.setVisible(true);
 					break;
