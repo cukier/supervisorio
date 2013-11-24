@@ -67,15 +67,19 @@ public class Selecionador extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Status statusPivo = new Status(pivo);
-			System.out.println("Location " + getLocation());
-			System.out.println("Size " + getSize());
-			statusPivo.setLocation(getWidth(), statusPivo.getCont()
-					* statusPivo.getHeight());
-			listaStatusPivo[cont++] = statusPivo;
-			statusPivo.setVisible(true);
-
+			for (Status status : listaStatusPivo) {
+				if (status != null && status.getPivoName().equals(pivo))
+					status.setVisible(true);
+				else {
+					Status statusPivo = new Status(pivo);
+					statusPivo.setLocation(getWidth(), statusPivo.getCont()
+							* statusPivo.getHeight());
+					listaStatusPivo[cont++] = statusPivo;
+					statusPivo.setVisible(true);
+				}
+			}
 		}
+
 	}
 
 	public boolean isFinalizarPrograma() {
