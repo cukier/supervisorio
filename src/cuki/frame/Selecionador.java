@@ -48,11 +48,9 @@ public class Selecionador extends JFrame {
 	}
 
 	public Status getStatusPivo(String pivo) {
-		if (listaStatusPivo[0] != null) {
-			for (Status retorno : listaStatusPivo) {
-				if (retorno.getPivoName().equals(pivo))
-					return retorno;
-			}
+		for (Status retorno : listaStatusPivo) {
+			if (retorno != null && retorno.getPivoName().equals(pivo))
+				return retorno;
 		}
 		return null;
 	}
@@ -68,19 +66,19 @@ public class Selecionador extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			for (Status status : listaStatusPivo) {
-				if (status != null && status.getPivoName().equals(pivo)) {
-					status.setVisible(true);
-					break;
-				} else {
+				if (status == null) {
 					Status statusPivo = new Status(pivo);
 					statusPivo.setLocation(getWidth(), statusPivo.getCont()
 							* statusPivo.getHeight());
 					listaStatusPivo[cont++] = statusPivo;
 					statusPivo.setVisible(true);
+					break;
+				} else if (status.getPivoName().equals(pivo)) {
+					status.setVisible(true);
+					break;
 				}
 			}
 		}
-
 	}
 
 	public boolean isFinalizarPrograma() {
