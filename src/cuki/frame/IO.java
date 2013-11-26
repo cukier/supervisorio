@@ -44,7 +44,7 @@ public class IO extends JFrame {
 	private JLabel ALARMEALINHAMENTO;
 	private JLabel ALARMEPRESSAO;
 
-	public IO() {
+	public IO(String pivo) {
 
 		MigLayout layout = new MigLayout("", "[grow,right][grow,left]",
 				"[grow][grow][grow][grow][grow]");
@@ -134,8 +134,8 @@ public class IO extends JFrame {
 
 		getContentPane().setLayout(flowlayout);
 		setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("Entras / Saidas");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setTitle("Entras / Saidas " + pivo);
 		pack();
 		setVisible(true);
 	}

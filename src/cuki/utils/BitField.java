@@ -50,12 +50,13 @@ public class BitField {
 		this.value = value;
 	}
 
-	public void setBit(int bitNr) throws IndexOutOfBoundsException {
+	public BitField setBit(int bitNr) throws IndexOutOfBoundsException {
 		if (bitNr <= 15)
 			this.value |= 1 << bitNr;
 		else
 			throw new IndexOutOfBoundsException(
 					"Index deve ser igual ou nemor que 15. Recebido: " + bitNr);
+		return this;
 	}
 
 	public void resetBit(int bitNr) {

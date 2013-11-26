@@ -1,5 +1,9 @@
 package cuki;
 
+import java.util.Arrays;
+
+import javafish.clients.opc.component.OpcGroup;
+import javafish.clients.opc.component.OpcItem;
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
 import javafish.clients.opc.exception.SynchReadException;
@@ -8,18 +12,33 @@ import javafish.clients.opc.exception.UnableAddItemException;
 import javafish.clients.opc.exception.UnableBrowseBranchException;
 import javafish.clients.opc.exception.UnableIBrowseException;
 import javafish.clients.opc.exception.UnableRemoveGroupException;
-import javafish.clients.opc.exception.VariantTypeException;
 import cuki.opc.ServidorOPC;
 
 public class ServidorOPCExample {
 
-	public static void main(String[] args) {
+	private static void loop(ServidorOPC atos, String pivo, OpcItem item)
+			throws InterruptedException, ComponentNotFoundException,
+			SynchReadException {
+		// while (true) {
+		for (int cont = 0; cont < 120; cont++) {
 
-		ServidorOPC servidor = new ServidorOPC();
-		ServidorOPCExample test = new ServidorOPCExample();
+			Thread.sleep(1000);
+			item = atos.getJOpc().synchReadItem(atos.getGroup(), item);
+			System.out.println(atos.getGroup().toString());
+			System.out.println(item);
+			if (item.isQuality())
+				break;
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+
+		ServidorOPC atos = new ServidorOPC();
+		String pivo = null;
+		final int SERVIDOR_NOT_FOUND = 1;
 
 		try {
-			servidor.connectAndRegister();
+			atos.connectAndRegister();
 		} catch (UnableAddGroupException e) {
 			e.printStackTrace();
 		} catch (UnableAddItemException e) {
@@ -32,35 +51,54 @@ public class ServidorOPCExample {
 			e.printStackTrace();
 		}
 
-		// String pivo = servidor.getServidores()[0];
+		String[] servidores = null;
+		servidores = atos.getServidores();
 
-		for (int cont = 0; cont < 120; cont++) {
-			synchronized (test) {
-				try {
-					test.wait(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+		System.out.println(Arrays.asList(servidores));
 
+		if (servidores == null || servidores.length > 1) {
 			try {
-				System.out.println(servidor.getJOpc().synchReadGroup(
-						servidor.getGroup()));
-				String pivo = servidor.getServidores()[0];
-				System.out.println(servidor.getanguloAtual(pivo));
-				System.out.println(servidor.getword0(pivo));
-				System.out.println(servidor.getlaminaGet(pivo));
+				atos.disconnect();
 			} catch (ComponentNotFoundException e) {
 				e.printStackTrace();
-			} catch (SynchReadException e) {
+			} catch (UnableRemoveGroupException e) {
 				e.printStackTrace();
-			} catch (VariantTypeException e) {
-				e.printStackTrace();
+			}
+			System.out.println("Mudar configuracao do servidor ATOS");
+			System.exit(SERVIDOR_NOT_FOUND);
+		} else {
+			pivo = servidores[0];
+		}
+
+		OpcItem item = null;
+		OpcGroup group = null;
+		try {
+			group = atos.getJOpc().synchReadGroup(atos.getGroup());
+		} catch (ComponentNotFoundException e2) {
+			e2.printStackTrace();
+		} catch (SynchReadException e2) {
+			e2.printStackTrace();
+		}
+		for (OpcItem aux : group.getItems()) {
+			if (aux.getItemName().contains("Word4")) {
+				item = aux;
 			}
 		}
 
 		try {
-			servidor.disconnect();
+			loop(atos, pivo, item);
+		} catch (ComponentNotFoundException | SynchReadException e2) {
+			throw new Exception("Loop error\n" + e2.getMessage());
+		}
+
+		System.out.println("Escrevendo em " + item);
+
+		Thread.sleep(200);
+
+		atos.iniciaIrrigacao(pivo);
+
+		try {
+			atos.disconnect();
 		} catch (ComponentNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnableRemoveGroupException e) {

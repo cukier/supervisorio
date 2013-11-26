@@ -2,7 +2,6 @@ package cuki.bin;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import javafish.clients.opc.exception.CoUninitializeException;
 import javafish.clients.opc.exception.ComponentNotFoundException;
@@ -23,6 +22,7 @@ public class Pivo {
 
 	private Selecionador selecionador;
 	private ServidorOPC conn;
+	private static final int EXIT_SUCESS = 0;
 
 	public Pivo() throws NoPivotFoundException {
 
@@ -50,7 +50,7 @@ public class Pivo {
 			selecionador = new Selecionador(servidores);
 		} else {
 			System.out
-					.println("Não foi encontrando nenhum pivo. Foi o servidor da ATOS instalado?");
+					.println("Não foi encontrando nenhum pivo. Foi instalado o servidor da ATOS?");
 			throw new NoPivotFoundException("");
 		}
 
@@ -75,6 +75,22 @@ public class Pivo {
 				if (status != null) {
 					try {
 						status.setAngulo(conn.getanguloAtual(pivo));
+						status.setword(conn.getword0(pivo),
+								conn.getword4(pivo), conn.getword6(pivo));
+						status.setAngulo(conn.getanguloAtual(pivo));
+						status.getMostrador().setEstado(
+								conn.getstatusPivo(pivo));
+						status.getMostrador().setSetor(
+								conn.getcontaSetor(pivo),
+								conn.getnrSetores(pivo));
+						status.getMostrador().setFase(conn.getcontaFase(pivo),
+								conn.getnrFases(pivo));
+						status.getMostrador().setBruta(conn.getlaminaGet(pivo));
+						status.getMostrador().setDuracao(
+								conn.gettempoRestanteHoras(pivo),
+								conn.getTempoRestanteMinutos(pivo));
+						status.getMostrador()
+								.setCiclo(conn.getcicloAtual(pivo));
 					} catch (ComponentNotFoundException e) {
 						e.printStackTrace();
 					} catch (SynchReadException e) {
@@ -82,6 +98,7 @@ public class Pivo {
 					} catch (VariantTypeException e) {
 						e.printStackTrace();
 					}
+					status.repaint();
 				}
 			}
 		}
@@ -89,19 +106,7 @@ public class Pivo {
 
 	public static void main(String[] args) throws NoPivotFoundException {
 
-		Pivo window;
-
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
+		Pivo lancador;
 
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -113,27 +118,23 @@ public class Pivo {
 		} catch (Exception e) {
 		}
 
-		try {
-			window = new Pivo();
-		} catch (NoPivotFoundException e1) {
-			throw e1;
-		}
+		lancador = new Pivo();
 
-		window.selecionador.setVisible(true);
+		lancador.selecionador.setVisible(true);
 
-		window.loop();
+		lancador.loop();
 
 		try {
-			window.conn.disconnect();
+			lancador.conn.disconnect();
 		} catch (ComponentNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnableRemoveGroupException e) {
 			e.printStackTrace();
 		}
 
-		window.conn = null;
-		window.selecionador = null;
+		lancador.conn = null;
+		lancador.selecionador = null;
 
-		System.exit(0);
+		System.exit(Pivo.EXIT_SUCESS);
 	}
 }

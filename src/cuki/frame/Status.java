@@ -104,7 +104,7 @@ public class Status extends JFrame {
 		menuItem = menu.add(new JMenuItem("Entradas e Saidas"));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				plcIO = new IO();
+				plcIO = new IO(pivo);
 				plcIO.setVisible(true);
 			}
 		});

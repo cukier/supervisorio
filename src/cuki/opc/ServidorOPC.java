@@ -9,13 +9,16 @@ import javafish.clients.opc.exception.CoUninitializeException;
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
 import javafish.clients.opc.exception.SynchReadException;
+import javafish.clients.opc.exception.SynchWriteException;
 import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
 import javafish.clients.opc.exception.UnableBrowseBranchException;
 import javafish.clients.opc.exception.UnableIBrowseException;
 import javafish.clients.opc.exception.UnableRemoveGroupException;
 import javafish.clients.opc.exception.VariantTypeException;
+import javafish.clients.opc.variant.Variant;
 import cuki.opc.ItensOPC;
+import cuki.utils.BitField;
 
 public class ServidorOPC {
 
@@ -437,5 +440,65 @@ public class ServidorOPC {
 
 	public JOpc getJOpc() {
 		return this.jopc;
+	}
+
+	public ItensOPC getItens(String Pivo) {
+		for (ItensOPC item : itensPivo) {
+			if (item.getPivo().equals(Pivo))
+				return item;
+		}
+		return null;
+	}
+
+	private void writeItem(OpcItem item, int value) throws SynchWriteException,
+			ComponentNotFoundException {
+
+		Variant varIn = new Variant(value);
+		item.setValue(varIn);
+
+		try {
+			jopc.synchWriteItem(group, item);
+		} catch (ComponentNotFoundException e) {
+			throw new ComponentNotFoundException("Não Encontrado: "
+					+ item.getItemName());
+		} catch (SynchWriteException e) {
+			throw new SynchWriteException("Erro de escrita "
+					+ item.getItemName());
+		}
+	}
+
+	public void writeSetorIndice(String pivo, int value)
+			throws SynchWriteException, ComponentNotFoundException {
+		try {
+			writeItem(itensPivo[indice(pivo)].getSetorIndice(), value);
+		} catch (ComponentNotFoundException e) {
+			throw e;
+		} catch (SynchWriteException e) {
+			throw e;
+		}
+	}
+
+	public void iniciaIrrigacao(String pivo) throws SynchWriteException,
+			ComponentNotFoundException, SynchReadException {
+
+		BitField word4;
+
+		try {
+			word4 = new BitField(getword4(pivo));
+		} catch (SynchReadException e) {
+			throw new SynchReadException(pivo + " word4");
+		} catch (VariantTypeException e) {
+			throw new VariantTypeException(pivo + " word4");
+		}
+
+		word4.setBit(BitField.inicioIrriga);
+
+		try {
+			writeItem(itensPivo[indice(pivo)].getWord4(), word4.getByte());
+		} catch (ComponentNotFoundException e) {
+			throw e;
+		} catch (SynchWriteException e) {
+			throw e;
+		}
 	}
 }
