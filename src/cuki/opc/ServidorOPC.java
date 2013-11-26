@@ -158,18 +158,20 @@ public class ServidorOPC {
 		System.out.println("Conexão encerrada");
 	}
 
+	public void syncItens() throws ComponentNotFoundException,
+			SynchReadException {
+		jopc.synchReadGroup(group);
+	}
+
 	private int parseItem(OpcItem item) throws NumberFormatException {
+
 		int retorno = 0;
-		boolean hex = false;
-
-		hex = item.getItemName().contains("ASYNC");
-
 		for (String aux : item.toString().split(";")) {
 			if (aux.contains("itemValue")) {
 				for (String aux2 : aux.split(" = ")) {
 					if (!aux2.contains("itemValue")) {
 						try {
-							if (hex)
+							if (item.getItemName().contains("ASYNC"))
 								retorno = Integer.parseInt(aux2, 16);
 							else
 								retorno = Integer.parseInt(aux2);
@@ -183,18 +185,31 @@ public class ServidorOPC {
 		return retorno;
 	}
 
-	private int getResponse(OpcItem item, String itemName)
-			throws ComponentNotFoundException, SynchReadException {
+	@SuppressWarnings("unused")
+	private int getResponse2(OpcItem item) throws ComponentNotFoundException,
+			SynchReadException {
 		int retorno = 0;
 
 		try {
 			OpcItem response = jopc.synchReadItem(group, item);
 			retorno = parseItem(response);
 		} catch (ComponentNotFoundException e) {
-			throw new ComponentNotFoundException("No component found");
+			throw new ComponentNotFoundException(item.getItemName()
+					+ ": No component found");
 		} catch (SynchReadException e) {
-			throw new SynchReadException(itemName + " Synch read error");
+			throw new SynchReadException(item.getItemName()
+					+ " Synch read error");
 		}
+
+		return retorno;
+	}
+
+	private int getResponse(OpcItem item) {
+
+		int retorno = 0;
+		for (OpcItem aux : group.getItemsAsArray())
+			if (aux.getItemName().equals(item.getItemName()))
+				retorno = parseItem(aux);
 
 		return retorno;
 	}
@@ -212,226 +227,73 @@ public class ServidorOPC {
 
 	public int getTempoRestanteMinutos(String pivo)
 			throws ComponentNotFoundException, SynchReadException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(
-					itensPivo[indice(pivo)].getTempoRestanteMinutos(),
-					"tempoRestanteMinutos");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getTempoRestanteMinutos());
 	}
 
 	public int getanguloAtual(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getAnguloAtual(),
-					"anguloAtual");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getAnguloAtual());
 	}
 
 	public int getcicloAtual(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getCicloAtual(),
-					"cicloAtual");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getCicloAtual());
 	}
 
 	public int getnrSetores(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getNrSetores(),
-					"nrSetores");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getNrSetores());
 	}
 
 	public int getcontaFase(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getContaFase(),
-					"contaFase");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getContaFase());
 	}
 
 	public int getcontaSetor(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getContaSetor(),
-					"contaSetor");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getContaSetor());
 	}
 
 	public int getnrFases(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getNrFases(),
-					"nrFases");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getNrFases());
 	}
 
 	public int getlaminaGet(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getLaminaGet(),
-					"laminaGet");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getLaminaGet());
 	}
 
 	public int gettempoRestanteHoras(String pivo)
 			throws ComponentNotFoundException, SynchReadException,
 			VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(
-					itensPivo[indice(pivo)].getTempoRestanteHoras(),
-					"tempoRestanteHoras");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getTempoRestanteHoras());
 	}
 
 	public int getword0(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getWord0(), "word0");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getWord0());
 	}
 
 	public int getword4(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getWord4(), "word4");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getWord4());
 	}
 
 	public int getword6(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getWord6(), "word6");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getWord6());
 	}
 
 	public int getstatusPivo(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getStatusPivo(),
-					"statusPivo");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getStatusPivo());
 	}
 
 	public int getsetorIndice(String pivo) throws ComponentNotFoundException,
 			SynchReadException, VariantTypeException {
-		int retorno = 0;
-
-		try {
-			retorno = getResponse(itensPivo[indice(pivo)].getSetorIndice(),
-					"setorIndice");
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchReadException e) {
-			throw e;
-		}
-
-		return retorno;
+		return getResponse(itensPivo[indice(pivo)].getSetorIndice());
 	}
 
 	public OpcGroup getGroup() {
@@ -485,20 +347,11 @@ public class ServidorOPC {
 
 		try {
 			word4 = new BitField(getword4(pivo));
-		} catch (SynchReadException e) {
+		} catch (SynchReadException | VariantTypeException e) {
 			throw new SynchReadException(pivo + " word4");
-		} catch (VariantTypeException e) {
-			throw new VariantTypeException(pivo + " word4");
 		}
 
 		word4.setBit(BitField.inicioIrriga);
-
-		try {
-			writeItem(itensPivo[indice(pivo)].getWord4(), word4.getByte());
-		} catch (ComponentNotFoundException e) {
-			throw e;
-		} catch (SynchWriteException e) {
-			throw e;
-		}
+		writeItem(itensPivo[indice(pivo)].getWord4(), word4.getByte());
 	}
 }
