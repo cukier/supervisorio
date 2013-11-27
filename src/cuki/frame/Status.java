@@ -78,7 +78,7 @@ public class Status extends JFrame {
 		menuItem = menu.add(new JMenuItem("Sair"));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				dispose();
 			}
 		});
 

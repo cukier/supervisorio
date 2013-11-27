@@ -22,6 +22,7 @@ public class ItensOPC {
 	private OpcItem statusPivo;
 	private OpcItem setorIndice;
 	private OpcItem tempoRestanteMinutos;
+	private OpcItem[] itensList;
 
 	public ItensOPC(String pivo) {
 		this.pivo = pivo;
@@ -94,10 +95,10 @@ public class ItensOPC {
 		setorIndice = new OpcItem(pivo + ".SYNC.setorIndice", true, "");
 		array.add(setorIndice);
 
-		OpcItem[] retorno = new OpcItem[array.size()];
-		array.toArray(retorno);
+		itensList = new OpcItem[array.size()];
+		array.toArray(itensList);
 
-		return retorno;
+		return itensList;
 	}
 
 	public String getPivo() {
@@ -160,4 +161,14 @@ public class ItensOPC {
 		return tempoRestanteMinutos;
 	}
 
+	public String toString() {
+
+		StringBuffer sb = new StringBuffer();
+
+		for (OpcItem item : itensList) {
+			sb.append(item + "\n");
+		}
+
+		return sb.toString();
+	}
 }

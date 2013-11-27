@@ -158,9 +158,11 @@ public class ServidorOPC {
 		System.out.println("Conexão encerrada");
 	}
 
-	public void syncItens() throws ComponentNotFoundException,
+	public OpcGroup syncItens() throws ComponentNotFoundException,
 			SynchReadException {
-		jopc.synchReadGroup(group);
+		group = jopc.synchReadGroup(group);
+		return group;
+
 	}
 
 	private int parseItem(OpcItem item) throws NumberFormatException {
@@ -208,9 +210,10 @@ public class ServidorOPC {
 
 		int retorno = 0;
 		for (OpcItem aux : group.getItemsAsArray())
-			if (aux.getItemName().equals(item.getItemName()))
+			if (aux.getItemName().equals(item.getItemName())) {
+				System.out.println(aux.toString());
 				retorno = parseItem(aux);
-
+			}
 		return retorno;
 	}
 
@@ -304,12 +307,8 @@ public class ServidorOPC {
 		return this.jopc;
 	}
 
-	public ItensOPC getItens(String Pivo) {
-		for (ItensOPC item : itensPivo) {
-			if (item.getPivo().equals(Pivo))
-				return item;
-		}
-		return null;
+	public ItensOPC getItens(String pivo) {
+		return itensPivo[indice(pivo)];
 	}
 
 	private void writeItem(OpcItem item, int value) throws SynchWriteException,

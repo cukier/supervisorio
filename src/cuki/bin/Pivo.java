@@ -23,6 +23,7 @@ public class Pivo {
 	private Selecionador selecionador;
 	private ServidorOPC conn;
 	private static final int EXIT_SUCESS = 0;
+	private AtualizaServidor atualizaServidor;
 
 	public Pivo() throws NoPivotFoundException {
 
@@ -54,17 +55,15 @@ public class Pivo {
 			throw new NoPivotFoundException("");
 		}
 
+		atualizaServidor = new AtualizaServidor();
+
 	}
 
-	private void loop() {
-		for (;;) {
-			synchronized (this) {
-				try {
-					this.wait(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+	private void loop() throws InterruptedException {
+		while (true) {
+
+			Thread.sleep(1000);
+
 			if (selecionador.isFinalizarPrograma()) {
 				System.out.println("Terminando Programa");
 				return;
@@ -74,6 +73,7 @@ public class Pivo {
 				Status status = selecionador.getStatusPivo(pivo);
 				if (status != null) {
 					try {
+						conn.syncItens();
 						status.setAngulo(conn.getanguloAtual(pivo));
 						status.setword(conn.getword0(pivo),
 								conn.getword4(pivo), conn.getword6(pivo));
@@ -93,15 +93,19 @@ public class Pivo {
 								.setCiclo(conn.getcicloAtual(pivo));
 					} catch (ComponentNotFoundException e) {
 						e.printStackTrace();
-					} catch (SynchReadException e) {
-						e.printStackTrace();
 					} catch (VariantTypeException e) {
+						e.printStackTrace();
+					} catch (SynchReadException e) {
 						e.printStackTrace();
 					}
 					status.repaint();
 				}
 			}
 		}
+	}
+
+	private boolean splashScreen() {
+
 	}
 
 	public static void main(String[] args) throws NoPivotFoundException {
@@ -119,10 +123,16 @@ public class Pivo {
 		}
 
 		lancador = new Pivo();
-
 		lancador.selecionador.setVisible(true);
 
-		lancador.loop();
+		Thread t = new Thread(lancador.atualizaServidor);
+		t.start();
+
+		try {
+			lancador.loop();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		try {
 			lancador.conn.disconnect();
