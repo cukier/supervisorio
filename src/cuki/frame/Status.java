@@ -11,6 +11,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import cuki.utils.BitField;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.Toolkit;
@@ -121,9 +122,15 @@ public class Status extends JFrame {
 		return this.most;
 	}
 
+	public Oval getOval() {
+		return this.oval;
+	}
+
 	public void setword(int word0, int word4, int word6) {
 		if (plcIO != null)
 			plcIO.setBytes(word0, word4, word6);
+		oval.setSetorRestrito(new BitField(word4)
+				.getBit(BitField.ultimoSetorRestrito));
 	}
 
 	private class MudarSentido extends Object implements ActionListener {

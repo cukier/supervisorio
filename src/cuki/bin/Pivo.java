@@ -1,5 +1,6 @@
 package cuki.bin;
 
+import javax.naming.SizeLimitExceededException;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -23,7 +24,6 @@ public class Pivo {
 	private Selecionador selecionador;
 	private ServidorOPC conn;
 	private static final int EXIT_SUCESS = 0;
-	private AtualizaServidor atualizaServidor;
 
 	public Pivo() throws NoPivotFoundException {
 
@@ -54,9 +54,6 @@ public class Pivo {
 					.println("Não foi encontrando nenhum pivo. Foi instalado o servidor da ATOS?");
 			throw new NoPivotFoundException("");
 		}
-
-		atualizaServidor = new AtualizaServidor();
-
 	}
 
 	private void loop() throws InterruptedException {
@@ -74,6 +71,8 @@ public class Pivo {
 				if (status != null) {
 					try {
 						conn.syncItens();
+						status.getOval().setAnguloFinal(
+								conn.getAnguloSetor(pivo));
 						status.setAngulo(conn.getanguloAtual(pivo));
 						status.setword(conn.getword0(pivo),
 								conn.getword4(pivo), conn.getword6(pivo));
@@ -97,15 +96,13 @@ public class Pivo {
 						e.printStackTrace();
 					} catch (SynchReadException e) {
 						e.printStackTrace();
+					} catch (SizeLimitExceededException e) {
+						e.printStackTrace();
 					}
 					status.repaint();
 				}
 			}
 		}
-	}
-
-	private boolean splashScreen() {
-
 	}
 
 	public static void main(String[] args) throws NoPivotFoundException {
@@ -124,9 +121,6 @@ public class Pivo {
 
 		lancador = new Pivo();
 		lancador.selecionador.setVisible(true);
-
-		Thread t = new Thread(lancador.atualizaServidor);
-		t.start();
 
 		try {
 			lancador.loop();

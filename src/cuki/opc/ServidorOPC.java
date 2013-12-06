@@ -299,6 +299,20 @@ public class ServidorOPC {
 		return getResponse(itensPivo[indice(pivo)].getSetorIndice());
 	}
 
+	public int[] getAnguloSetor(String pivo) {
+		int[] retorno = new int[6];
+		for (OpcItem item : group.getItemsAsArray()) {
+			if (item.getItemName().contains("anguloSetor")) {
+				int cont = 0;
+				for (String aux : item.getValue().getString()
+						.split("(?<=\\G.{4})")) {
+					retorno[cont++] = Integer.parseInt(aux, 16);
+				}
+			}
+		}
+		return retorno;
+	}
+
 	public OpcGroup getGroup() {
 		return this.group;
 	}
