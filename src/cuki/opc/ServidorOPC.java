@@ -55,6 +55,7 @@ public class ServidorOPC {
 
 		try {
 			JOpcBrowser.coInitialize();
+			System.out.println("Inializado JOpcBrowser");
 		} catch (CoInitializeException e) {
 			throw new CoInitializeException(
 					"Falha ao buscar equipamentos de comunicação");
@@ -79,6 +80,7 @@ public class ServidorOPC {
 
 		try {
 			JOpcBrowser.coUninitialize();
+			System.out.println("Encerrando JOpcBrowser");
 		} catch (CoUninitializeException e) {
 			throw new CoUninitializeException("Falha ao encerrar OPC Browser");
 		}
@@ -211,7 +213,7 @@ public class ServidorOPC {
 		int retorno = 0;
 		for (OpcItem aux : group.getItemsAsArray())
 			if (aux.getItemName().equals(item.getItemName())) {
-				System.out.println(aux.toString());
+				// System.out.println(aux.toString());
 				retorno = parseItem(aux);
 			}
 		return retorno;
@@ -302,12 +304,18 @@ public class ServidorOPC {
 	public int[] getAnguloSetor(String pivo) {
 		int[] retorno = new int[6];
 		for (OpcItem item : group.getItemsAsArray()) {
-			if (item.getItemName().contains("anguloSetor")) {
+			if (item.getItemName().contains("anguloSetor")
+					&& item.getItemName().contains(pivo)) {
 				int cont = 0;
 				for (String aux : item.getValue().getString()
 						.split("(?<=\\G.{4})")) {
-					retorno[cont++] = Integer.parseInt(aux, 16);
+					try {
+						retorno[cont++] = Integer.parseInt(aux, 16);
+					} catch (NumberFormatException e) {
+						retorno[cont++] = 360;
+					}
 				}
+				break;
 			}
 		}
 		return retorno;

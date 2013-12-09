@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.util.Arrays;
 
 import javax.naming.SizeLimitExceededException;
 import javax.swing.BorderFactory;
@@ -56,7 +57,8 @@ public class Oval extends JPanel {
 			angulo += anguloMenor;
 		} else
 			angulo = 0;
-		g2.drawString(texto, getDistX(angulo, this.diam / 2),
+		g2.drawString(texto,
+				getDistX(angulo, this.diam / 2) - 3 * texto.length(),
 				getDistY(angulo, this.diam / 2));
 	}
 
@@ -90,7 +92,8 @@ public class Oval extends JPanel {
 					acumulador = 0;
 				desenhaLinha(g2, aro, acumulador);
 				desenhaTexto(g2, aro, acumulador, acumulador
-						- anguloFinal[cont], String.valueOf(cont + 1));
+						- anguloFinal[cont],
+						"Setor " + String.valueOf(cont + 1));
 			}
 		}
 
@@ -105,8 +108,9 @@ public class Oval extends JPanel {
 		if (anguloFinal.length != 6)
 			throw new SizeLimitExceededException(
 					"Variavel angulo final deve ter 6 elementos");
-		else
+		else {
 			this.anguloFinal = anguloFinal;
+		}
 	}
 
 	public void setSetorRestrito(boolean value) {
