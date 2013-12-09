@@ -3,7 +3,6 @@ package cuki.bin;
 import javax.naming.SizeLimitExceededException;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-
 import javafish.clients.opc.exception.CoUninitializeException;
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
@@ -21,7 +20,7 @@ import cuki.opc.ServidorOPC;
 
 public class Pivo {
 
-	private Selecionador selecionador;
+	private Selecionador selecionador = null;
 	private ServidorOPC conn;
 	private static final int EXIT_SUCESS = 0;
 
@@ -48,7 +47,7 @@ public class Pivo {
 		String[] servidores = conn.getServidores();
 
 		if (servidores.length > 0) {
-			selecionador = new Selecionador(servidores);
+			selecionador = new Selecionador(servidores, conn);
 		} else {
 			System.out
 					.println("Não foi encontrando nenhum pivo. Foi instalado o servidor da ATOS?");

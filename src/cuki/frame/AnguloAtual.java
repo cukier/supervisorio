@@ -35,10 +35,6 @@ public class AnguloAtual extends JPanel {
 				new ImageIcon(
 						AnguloAtual.class
 								.getResource("/cuki/frame/images/horario.jpg")));
-		BtoSentido.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		add(BtoSentido, "cell 1 0,alignx center,aligny center");
 		setBorder(BorderFactory.createTitledBorder("Angulo Atual"));
 		setForeground(Color.WHITE);

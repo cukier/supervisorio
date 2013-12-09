@@ -375,4 +375,39 @@ public class ServidorOPC {
 		word4.setBit(BitField.inicioIrriga);
 		writeItem(itensPivo[indice(pivo)].getWord4(), word4.getByte());
 	}
+
+	public void setSentdido(String pivo) throws ComponentNotFoundException,
+			SynchWriteException, SynchReadException {
+		BitField word4 = null;
+
+		try {
+			word4 = new BitField(getword4(pivo));
+		} catch (ComponentNotFoundException e) {
+			throw new ComponentNotFoundException("word 4 não encontrado");
+		} catch (SynchReadException e) {
+			throw new SynchReadException("erro ao ler word4");
+		} catch (VariantTypeException e) {
+			throw new VariantTypeException("word 4 formato invalido");
+		}
+
+		if (word4 != null) {
+
+			System.out.println("Sentdo antes: "
+					+ word4.getBit(BitField.sentido));
+
+			if (word4.getBit(BitField.sentido))
+				word4.resetBit(BitField.sentido);
+			else
+				word4.setBit(BitField.sentido);
+
+			System.out.println("Sentdo antes: "
+					+ word4.getBit(BitField.sentido));
+
+			try {
+				writeItem(itensPivo[indice(pivo)].getWord4(), word4.getByte());
+			} catch (ComponentNotFoundException | SynchWriteException e) {
+				throw e;
+			}
+		}
+	}
 }

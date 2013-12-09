@@ -95,7 +95,8 @@ public class ServidorOPCWriteExample {
 
 		Thread.sleep(200);
 
-		atos.iniciaIrrigacao(pivo);
+		// atos.iniciaIrrigacao(pivo);
+		atos.setSentdido(pivo);
 
 		try {
 			atos.disconnect();

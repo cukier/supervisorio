@@ -26,7 +26,6 @@ public class Status extends JFrame {
 	private IO plcIO = null;
 	private static int cont = -1;
 	private String pivo;
-	private boolean sentido = true;
 
 	public Status(String pivo) {
 		cont++;
@@ -53,7 +52,7 @@ public class Status extends JFrame {
 
 		ang = new AnguloAtual();
 		getContentPane().add(ang, "cell 0 2,grow");
-		ang.getBto().addActionListener(new MudarSentido());
+		// ang.getBto().addActionListener(new MudarSentido());
 
 		setTitle(pivo);
 
@@ -126,20 +125,18 @@ public class Status extends JFrame {
 		return this.oval;
 	}
 
+	public AnguloAtual getAnguloAtual() {
+		return this.ang;
+	}
+
 	public void setword(int word0, int word4, int word6) {
 		if (plcIO != null)
 			plcIO.setBytes(word0, word4, word6);
-		oval.setSetorRestrito(new BitField(word4)
-				.getBit(BitField.ultimoSetorRestrito));
-	}
 
-	private class MudarSentido extends Object implements ActionListener {
+		BitField Word4 = new BitField(word4);
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			sentido = !sentido;
-			ang.setSentido(sentido);
-		}
+		oval.setSetorRestrito(Word4.getBit(BitField.ultimoSetorRestrito));
+		ang.setSentido(Word4.getBit(BitField.sentido));
 	}
 
 	public int getCont() {

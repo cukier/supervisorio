@@ -4,13 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
-import javax.swing.JFrame;
-
+import javafish.clients.opc.exception.ComponentNotFoundException;
+import javafish.clients.opc.exception.SynchReadException;
+import javafish.clients.opc.exception.SynchWriteException;
 import net.miginfocom.swing.MigLayout;
-
+import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+
+import cuki.opc.ServidorOPC;
 
 @SuppressWarnings("serial")
 public class Selecionador extends JFrame {
@@ -20,11 +22,13 @@ public class Selecionador extends JFrame {
 	private boolean finalizarPrograma = false;
 	private String[] pivos;
 	private int cont;
+	private ServidorOPC servidorOPC;
 
-	public Selecionador(String[] servidores) {
+	public Selecionador(String[] servidores, ServidorOPC servidorOPC) {
 
 		this.pivos = servidores;
 		this.listaStatusPivo = new Status[servidores.length];
+		this.servidorOPC = servidorOPC;
 
 		if (servidores.length > 0 && servidores != null) {
 			getContentPane().setLayout(new MigLayout("", "[grow]", "[grow]"));
@@ -44,6 +48,7 @@ public class Selecionador extends JFrame {
 				dispose();
 			}
 		});
+		setTitle("Krebs 4001 - Acesso Remoto");
 		pack();
 	}
 
@@ -53,6 +58,10 @@ public class Selecionador extends JFrame {
 				return retorno;
 		}
 		return null;
+	}
+
+	public Status[] getStatusPivo() {
+		return this.listaStatusPivo;
 	}
 
 	private class BtnListener implements ActionListener {
@@ -70,6 +79,26 @@ public class Selecionador extends JFrame {
 					Status statusPivo = new Status(pivo);
 					statusPivo.setLocation(getWidth() + statusPivo.getCont()
 							* 30, statusPivo.getCont() * 30);
+					statusPivo.getAnguloAtual().getBto()
+							.addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									try {
+										servidorOPC.setSentdido(pivo);
+									} catch (ComponentNotFoundException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									} catch (SynchWriteException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									} catch (SynchReadException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+
+								}
+							});
 					listaStatusPivo[cont++] = statusPivo;
 					statusPivo.setVisible(true);
 					break;
