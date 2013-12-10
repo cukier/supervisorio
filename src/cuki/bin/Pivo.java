@@ -3,6 +3,8 @@ package cuki.bin;
 import javax.naming.SizeLimitExceededException;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
+import javafish.clients.opc.component.OpcItem;
 import javafish.clients.opc.exception.CoUninitializeException;
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
@@ -21,15 +23,15 @@ import cuki.opc.ServidorOPC;
 public class Pivo {
 
 	private Selecionador selecionador = null;
-	private ServidorOPC conn;
+	private ServidorOPC atos;
 	private static final int EXIT_SUCESS = 0;
 
 	public Pivo() throws NoPivotFoundException {
 
-		conn = new ServidorOPC();
+		atos = new ServidorOPC();
 
 		try {
-			conn.connectAndRegister();
+			atos.connectAndRegister();
 		} catch (UnableAddGroupException e) {
 			e.printStackTrace();
 		} catch (UnableAddItemException e) {
@@ -44,10 +46,10 @@ public class Pivo {
 			e.printStackTrace();
 		}
 
-		String[] servidores = conn.getServidores();
+		String[] servidores = atos.getServidores();
 
 		if (servidores.length > 0) {
-			selecionador = new Selecionador(servidores, conn);
+			selecionador = new Selecionador(servidores, atos);
 		} else {
 			System.out
 					.println("Não foi encontrando nenhum pivo. Foi instalado o servidor da ATOS?");
@@ -56,6 +58,7 @@ public class Pivo {
 	}
 
 	private void loop() throws InterruptedException {
+
 		while (true) {
 
 			Thread.sleep(1000);
@@ -69,26 +72,29 @@ public class Pivo {
 				Status status = selecionador.getStatusPivo(pivo);
 				if (status != null) {
 					try {
-						conn.syncItens();
+						atos.syncItens();
 						status.getOval().setAnguloFinal(
-								conn.getAnguloSetor(pivo));
-						status.setAngulo(conn.getanguloAtual(pivo));
-						status.setword(conn.getword0(pivo),
-								conn.getword4(pivo), conn.getword6(pivo));
-						status.setAngulo(conn.getanguloAtual(pivo));
+								atos.getAnguloSetor(pivo));
+						status.setAngulo(atos.getanguloAtual(pivo));
+						status.setword(atos.getword0(pivo),
+								atos.getword4(pivo), atos.getword6(pivo));
+						status.setAngulo(atos.getanguloAtual(pivo));
 						status.getMostrador().setEstado(
-								conn.getstatusPivo(pivo));
+								atos.getstatusPivo(pivo));
 						status.getMostrador().setSetor(
-								conn.getcontaSetor(pivo),
-								conn.getnrSetores(pivo));
-						status.getMostrador().setFase(conn.getcontaFase(pivo),
-								conn.getnrFases(pivo));
-						status.getMostrador().setBruta(conn.getlaminaGet(pivo));
+								atos.getcontaSetor(pivo),
+								atos.getnrSetores(pivo));
+						status.getMostrador().setFase(atos.getcontaFase(pivo),
+								atos.getnrFases(pivo));
+						status.getMostrador().setBruta(atos.getlaminaGet(pivo));
 						status.getMostrador().setDuracao(
-								conn.gettempoRestanteHoras(pivo),
-								conn.getTempoRestanteMinutos(pivo));
+								atos.gettempoRestanteHoras(pivo),
+								atos.getTempoRestanteMinutos(pivo));
 						status.getMostrador()
-								.setCiclo(conn.getcicloAtual(pivo));
+								.setCiclo(atos.getcicloAtual(pivo));
+						OpcItem item = atos.getItem(pivo, atos.getItens(pivo)
+								.getWord4());
+						System.out.println(item.toString());
 					} catch (ComponentNotFoundException e) {
 						e.printStackTrace();
 					} catch (VariantTypeException e) {
@@ -128,14 +134,14 @@ public class Pivo {
 		}
 
 		try {
-			lancador.conn.disconnect();
+			lancador.atos.disconnect();
 		} catch (ComponentNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnableRemoveGroupException e) {
 			e.printStackTrace();
 		}
 
-		lancador.conn = null;
+		lancador.atos = null;
 		lancador.selecionador = null;
 
 		System.exit(Pivo.EXIT_SUCESS);

@@ -85,15 +85,12 @@ public class Selecionador extends JFrame {
 								@Override
 								public void actionPerformed(ActionEvent e) {
 									try {
-										servidorOPC.setSentdido(pivo);
+										servidorOPC.reverteSentido(pivo);
 									} catch (ComponentNotFoundException e1) {
-										// TODO Auto-generated catch block
 										e1.printStackTrace();
 									} catch (SynchWriteException e1) {
-										// TODO Auto-generated catch block
 										e1.printStackTrace();
 									} catch (SynchReadException e1) {
-										// TODO Auto-generated catch block
 										e1.printStackTrace();
 									}
 

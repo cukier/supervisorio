@@ -466,7 +466,7 @@ public class ServidorOPC {
 		writeItem(itensPivo[indice(pivo)].getWord4(), word4.getByte());
 	}
 
-	public void setSentdido(String pivo) throws ComponentNotFoundException,
+	public void reverteSentido(String pivo) throws ComponentNotFoundException,
 			SynchWriteException, SynchReadException {
 		BitField word4 = null;
 
@@ -490,7 +490,7 @@ public class ServidorOPC {
 			else
 				word4.setBit(BitField.sentido);
 
-			System.out.println("Sentdo antes: "
+			System.out.println("Sentdo depois: "
 					+ word4.getBit(BitField.sentido));
 
 			try {
