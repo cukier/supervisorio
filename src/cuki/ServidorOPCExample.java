@@ -2,11 +2,10 @@ package cuki;
 
 import java.util.Arrays;
 
-import javafish.clients.opc.component.OpcGroup;
-import javafish.clients.opc.component.OpcItem;
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
 import javafish.clients.opc.exception.SynchReadException;
+import javafish.clients.opc.exception.SynchWriteException;
 import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
 import javafish.clients.opc.exception.UnableBrowseBranchException;
@@ -16,22 +15,30 @@ import cuki.opc.ServidorOPC;
 
 public class ServidorOPCExample {
 
-	private static void loop(ServidorOPC atos, String pivo, OpcItem item)
-			throws InterruptedException, ComponentNotFoundException,
-			SynchReadException {
-		// while (true) {
-		for (int cont = 0; cont < 120; cont++) {
-
+	private static void loop(ServidorOPC atos, String pivo)
+			throws InterruptedException {
+		while (true) {
 			Thread.sleep(1000);
-			item = atos.getJOpc().synchReadItem(atos.getGroup(), item);
-			System.out.println(atos.getGroup().toString());
-			System.out.println(item);
-			if (item.isQuality())
+
+			try {
+				atos.syncItens();
+			} catch (ComponentNotFoundException e) {
+				e.printStackTrace();
+			} catch (SynchReadException e) {
+				e.printStackTrace();
+			}
+
+			System.out.println("Verificando sinal");
+			String sinal = atos.getSignal(pivo, 30);
+
+			if (sinal.equals(ServidorOPC.sinalBom))
 				break;
+			else
+				System.out.println(sinal);
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws InterruptedException {
 
 		ServidorOPC atos = new ServidorOPC();
 		String pivo = null;
@@ -70,32 +77,22 @@ public class ServidorOPCExample {
 			pivo = servidores[0];
 		}
 
-		OpcItem item = null;
-		OpcGroup group = null;
-		try {
-			group = atos.getJOpc().synchReadGroup(atos.getGroup());
-		} catch (ComponentNotFoundException e2) {
-			e2.printStackTrace();
-		} catch (SynchReadException e2) {
-			e2.printStackTrace();
-		}
-		for (OpcItem aux : group.getItems()) {
-			if (aux.getItemName().contains("Word4")) {
-				item = aux;
-			}
-		}
-
-		try {
-			loop(atos, pivo, item);
-		} catch (ComponentNotFoundException | SynchReadException e2) {
-			throw new Exception("Loop error\n" + e2.getMessage());
-		}
-
-		System.out.println("Escrevendo em " + item);
+		loop(atos, pivo);
 
 		Thread.sleep(200);
 
-		atos.iniciaIrrigacao(pivo);
+		try {
+			System.out.println("enviando comando");
+			atos.pararIrrigacao(pivo);
+			// atos.iniciaIrrigacao(pivo);
+			// atos.setSentdido(pivo);
+		} catch (ComponentNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (SynchReadException e1) {
+			e1.printStackTrace();
+		} catch (SynchWriteException e1) {
+			e1.printStackTrace();
+		}
 
 		try {
 			atos.disconnect();

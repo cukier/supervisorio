@@ -429,7 +429,25 @@ public class ServidorOPC {
 			throw new VariantTypeException("erro de convesao word 6");
 		}
 
-		word6.resetBit(BitField.pararIrriga);
+		word6.setBit(BitField.pararIrriga);
+		writeItem(itensPivo[indice(pivo)].getWord6(), word6.getByte());
+	}
+
+	public void emEspera(String pivo) throws SynchReadException,
+			ComponentNotFoundException, SynchWriteException {
+		BitField word6;
+
+		try {
+			word6 = new BitField(getword6(pivo));
+		} catch (ComponentNotFoundException e) {
+			throw new ComponentNotFoundException("nao encotrada word 6");
+		} catch (SynchReadException e) {
+			throw new SynchReadException("erro ao ler word 6");
+		} catch (VariantTypeException e) {
+			throw new VariantTypeException("erro de convesao word 6");
+		}
+
+		word6.resetBit(BitField.emEspera);
 		writeItem(itensPivo[indice(pivo)].getWord6(), word6.getByte());
 	}
 
@@ -518,7 +536,7 @@ public class ServidorOPC {
 	}
 
 	public String getSignal(String pivo, int porc) {
-		float porcento = porc / 100;
+		float porcento = (float) porc / 100;
 		boolean[] qualidade = getQuality(pivo);
 		int total = qualidade.length;
 
