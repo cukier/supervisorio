@@ -15,6 +15,7 @@ import javafish.clients.opc.exception.SynchWriteException;
 import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
 import javafish.clients.opc.exception.UnableBrowseBranchException;
+import javafish.clients.opc.exception.UnableBrowseLeafException;
 import javafish.clients.opc.exception.UnableIBrowseException;
 import javafish.clients.opc.exception.UnableRemoveGroupException;
 import javafish.clients.opc.exception.VariantTypeException;
@@ -49,6 +50,42 @@ public class ServidorOPC {
 		group = new OpcGroup("group1", true, 500, 0.0f);
 	}
 
+	private ArrayList<String> achaItensRecursivo(String leaf,
+			ArrayList<String> lista, JOpcBrowser opcBrowser) {
+
+		String[] itens = null;
+
+		try {
+			itens = opcBrowser.getOpcItems(leaf, true);
+		} catch (UnableBrowseLeafException | UnableIBrowseException
+				| UnableAddGroupException | UnableAddItemException e) {
+			e.printStackTrace();
+		}
+
+		if (itens != null) {
+			for (String item : itens) {
+				lista.add(item);
+			}
+		}
+
+		String[] branches = null;
+
+		try {
+			branches = opcBrowser.getOpcBranch(leaf);
+		} catch (UnableBrowseBranchException | UnableIBrowseException e) {
+			e.printStackTrace();
+		}
+
+		if (branches != null) {
+			for (String brach : branches) {
+				lista = achaItensRecursivo(brach, lista, opcBrowser);
+			}
+		}
+
+		return lista;
+
+	}
+
 	private String[] getServers() throws ConnectivityException,
 			UnableBrowseBranchException, UnableIBrowseException,
 			CoUninitializeException {
@@ -81,6 +118,25 @@ public class ServidorOPC {
 		} catch (UnableIBrowseException e) {
 			throw new UnableIBrowseException(
 					"Falha ao buscar equipamentos de comunicação (3)");
+		}
+
+		if (retorno != null) {
+			for (String equimaneto : retorno) {
+				String[] itens = null;
+				try {
+					itens = opcBrowser.getOpcItems(equimaneto, true);
+				} catch (UnableBrowseLeafException e) {
+					e.printStackTrace();
+				} catch (UnableAddGroupException e) {
+					e.printStackTrace();
+				} catch (UnableAddItemException e) {
+					e.printStackTrace();
+				}
+
+				if (itens != null) {
+
+				}
+			}
 		}
 
 		try {
