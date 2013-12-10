@@ -1,5 +1,7 @@
 package cuki.opc;
 
+import java.util.ArrayList;
+
 import javafish.clients.opc.JOpc;
 import javafish.clients.opc.browser.JOpcBrowser;
 import javafish.clients.opc.component.OpcGroup;
@@ -13,6 +15,7 @@ import javafish.clients.opc.exception.SynchWriteException;
 import javafish.clients.opc.exception.UnableAddGroupException;
 import javafish.clients.opc.exception.UnableAddItemException;
 import javafish.clients.opc.exception.UnableBrowseBranchException;
+import javafish.clients.opc.exception.UnableBrowseLeafException;
 import javafish.clients.opc.exception.UnableIBrowseException;
 import javafish.clients.opc.exception.UnableRemoveGroupException;
 import javafish.clients.opc.exception.VariantTypeException;
@@ -29,6 +32,7 @@ public class ServidorOPC {
 	private OpcGroup group;
 	private String[] servidores;
 	private ItensOPC[] itensPivo;
+	private ArrayList<String> itensList;
 
 	public ServidorOPC() {
 		this("localhost", "Atos.OPCConnect.1", "JOpcAtos1");
@@ -42,6 +46,42 @@ public class ServidorOPC {
 
 		jopc = new JOpc(this.host, this.server, this.serverClientHandle);
 		group = new OpcGroup("group1", true, 500, 0.0f);
+	}
+
+	private ArrayList<String> achaItensRecursivo(String leaf,
+			ArrayList<String> lista, JOpcBrowser opcBrowser) {
+
+		String[] itens = null;
+
+		try {
+			itens = opcBrowser.getOpcItems(leaf, true);
+		} catch (UnableBrowseLeafException | UnableIBrowseException
+				| UnableAddGroupException | UnableAddItemException e) {
+			e.printStackTrace();
+		}
+
+		if (itens != null) {
+			for (String item : itens) {
+				lista.add(item);
+			}
+		}
+
+		String[] branches = null;
+
+		try {
+			branches = opcBrowser.getOpcBranch(leaf);
+		} catch (UnableBrowseBranchException | UnableIBrowseException e) {
+			e.printStackTrace();
+		}
+
+		if (branches != null) {
+			for (String brach : branches) {
+				lista = achaItensRecursivo(brach, lista, opcBrowser);
+			}
+		}
+
+		return lista;
+
 	}
 
 	private String[] getServers() throws ConnectivityException,
@@ -76,6 +116,25 @@ public class ServidorOPC {
 		} catch (UnableIBrowseException e) {
 			throw new UnableIBrowseException(
 					"Falha ao buscar equipamentos de comunicação (3)");
+		}
+
+		if (retorno != null) {
+			for (String equimaneto : retorno) {
+				String[] itens = null;
+				try {
+					itens = opcBrowser.getOpcItems(equimaneto, true);
+				} catch (UnableBrowseLeafException e) {
+					e.printStackTrace();
+				} catch (UnableAddGroupException e) {
+					e.printStackTrace();
+				} catch (UnableAddItemException e) {
+					e.printStackTrace();
+				}
+
+				if (itens != null) {
+
+				}
+			}
 		}
 
 		try {
