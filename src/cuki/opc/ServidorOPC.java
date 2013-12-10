@@ -1,5 +1,7 @@
 package cuki.opc;
 
+import java.util.ArrayList;
+
 import javafish.clients.opc.JOpc;
 import javafish.clients.opc.browser.JOpcBrowser;
 import javafish.clients.opc.component.OpcGroup;
@@ -29,6 +31,9 @@ public class ServidorOPC {
 	private OpcGroup group;
 	private String[] servidores;
 	private ItensOPC[] itensPivo;
+	public static final String sinalRuim = "sinal ruim";
+	public static final String sinalMedio = "sinal médio";
+	public static final String sinalBom = "sinal bom";
 
 	public ServidorOPC() {
 		this("localhost", "Atos.OPCConnect.1", "JOpcAtos1");
@@ -321,14 +326,6 @@ public class ServidorOPC {
 		return retorno;
 	}
 
-	public OpcGroup getGroup() {
-		return this.group;
-	}
-
-	public JOpc getJOpc() {
-		return this.jopc;
-	}
-
 	public ItensOPC getItens(String pivo) {
 		return itensPivo[indice(pivo)];
 	}
@@ -359,6 +356,25 @@ public class ServidorOPC {
 		} catch (SynchWriteException e) {
 			throw e;
 		}
+	}
+
+	public void pararIrrigacao(String pivo) throws SynchReadException,
+			ComponentNotFoundException, SynchWriteException {
+
+		BitField word6;
+
+		try {
+			word6 = new BitField(getword6(pivo));
+		} catch (ComponentNotFoundException e) {
+			throw new ComponentNotFoundException("nao encotrada word 6");
+		} catch (SynchReadException e) {
+			throw new SynchReadException("erro ao ler word 6");
+		} catch (VariantTypeException e) {
+			throw new VariantTypeException("erro de convesao word 6");
+		}
+
+		word6.resetBit(BitField.pararIrriga);
+		writeItem(itensPivo[indice(pivo)].getWord6(), word6.getByte());
 	}
 
 	public void iniciaIrrigacao(String pivo) throws SynchWriteException,
@@ -409,5 +425,71 @@ public class ServidorOPC {
 				throw e;
 			}
 		}
+	}
+
+	private OpcItem[] getItensFromPivo(String pivo) {
+
+		ArrayList<OpcItem> itensList = new ArrayList<OpcItem>();
+
+		for (OpcItem item : group.getItemsAsArray()) {
+			if (item.getItemName().contains(pivo))
+				itensList.add(item);
+		}
+
+		OpcItem[] itens = new OpcItem[itensList.size()];
+		itensList.toArray(itens);
+
+		return itens;
+	}
+
+	public boolean[] getQuality(String pivo) {
+
+		ArrayList<Boolean> qualityList = new ArrayList<Boolean>();
+
+		for (OpcItem item : getItensFromPivo(pivo)) {
+			if (item.getItemName().contains("ASYNC"))
+				qualityList.add(item.isQuality());
+		}
+
+		boolean[] itens = new boolean[qualityList.size()];
+
+		int cont = 0;
+		for (Boolean aux : qualityList) {
+			itens[cont++] = aux;
+		}
+
+		return itens;
+	}
+
+	public String getSignal(String pivo, int porc) {
+		float porcento = porc / 100;
+		boolean[] qualidade = getQuality(pivo);
+		int total = qualidade.length;
+
+		if (porcento > total / 3)
+			porcento = total / 3;
+
+		int cont = 0;
+		for (boolean ok : qualidade) {
+			if (ok)
+				cont++;
+		}
+
+		String sinal = sinalRuim;
+		if (cont > total * porcento && cont <= total * (1 - porcento))
+			sinal = sinalMedio;
+		else if (cont > total * (1 - porcento))
+			sinal = sinalBom;
+
+		return sinal;
+	}
+
+	public OpcItem getItem(String pivo, OpcItem item) {
+		for (OpcItem aux : group.getItemsAsArray()) {
+			if (aux.getItemName().equals(item.getItemName())) {
+				return aux;
+			}
+		}
+		return null;
 	}
 }

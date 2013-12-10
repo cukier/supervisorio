@@ -19,14 +19,29 @@ public class ServidorOPCWriteExample {
 	private static void loop(ServidorOPC atos, String pivo, OpcItem item)
 			throws InterruptedException, ComponentNotFoundException,
 			SynchReadException {
-		// while (true) {
-		for (int cont = 0; cont < 120; cont++) {
+		while (true) {
+			// for (int cont = 0; cont < 120; cont++) {
 
 			Thread.sleep(1000);
-			item = atos.getJOpc().synchReadItem(atos.getGroup(), item);
-			System.out.println(atos.getGroup().toString());
-			System.out.println(item);
-			if (item.isQuality())
+			atos.syncItens();
+			// item = atos.getItem(pivo, atos.getItens(pivo).getWord6());
+			// System.out.println(item);
+
+			// boolean ok = false;
+			//
+			// for (boolean aux : atos.getQuality(pivo)) {
+			// System.out.print(aux + " ");
+			// ok &= aux;
+			// }
+			// System.out.print(": " + ok);
+			// System.out.println("");
+			//
+			// if (ok)
+			// break;
+
+			String sinal = atos.getSignal(pivo, 30);
+			System.out.println(sinal);
+			if (sinal.equals(ServidorOPC.sinalBom))
 				break;
 		}
 	}
@@ -72,8 +87,9 @@ public class ServidorOPCWriteExample {
 
 		OpcItem item = null;
 		OpcGroup group = null;
+
 		try {
-			group = atos.getJOpc().synchReadGroup(atos.getGroup());
+			group = atos.syncItens();
 		} catch (ComponentNotFoundException e2) {
 			e2.printStackTrace();
 		} catch (SynchReadException e2) {
@@ -96,7 +112,8 @@ public class ServidorOPCWriteExample {
 		Thread.sleep(200);
 
 		// atos.iniciaIrrigacao(pivo);
-		atos.setSentdido(pivo);
+		// atos.setSentdido(pivo);
+		atos.pararIrrigacao(pivo);
 
 		try {
 			atos.disconnect();
