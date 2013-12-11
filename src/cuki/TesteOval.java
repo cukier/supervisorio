@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 
 import cuki.frame.Oval;
 
+@SuppressWarnings("serial")
 public class TesteOval extends JFrame implements ActionListener {
 
 	Oval pizza = new Oval();

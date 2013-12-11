@@ -25,13 +25,17 @@ public class Mostrador extends JPanel {
 	private JLabel bruta = null;
 	private JLabel duracao = null;
 	private JLabel ciclo = null;
+	private JLabel qualidade = null;
 	private JButton bto = null;
+	private Sinal sinal = null;
+	private final Font font = new Font("Helvetica Neue Light", Font.PLAIN, 20);
 
 	public Mostrador() {
 
 		setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("center:default:grow"), }, new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -47,33 +51,40 @@ public class Mostrador extends JPanel {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("bottom:default:grow"), }));
 
+		qualidade = new JLabel("Sinal do Modem: ");
+		qualidade.setFont(font);
+		add(qualidade, "2, 2, center, default");
+
+		sinal = new Sinal(Color.RED);
+		add(sinal, "2, 2, right, default");
+
 		estado = new JLabel("Estado: ");
-		estado.setFont(new Font("Helvetica Neue Light", Font.PLAIN, 20));
-		add(estado, "2, 2, center, default");
+		estado.setFont(font);
+		add(estado, "2, 4, center, default");
 
 		setor = new JLabel("Setor: ");
-		setor.setFont(new Font("Helvetica Neue Light", Font.PLAIN, 20));
-		add(setor, "2, 4, center, default");
+		setor.setFont(font);
+		add(setor, "2, 6, center, default");
 
 		fase = new JLabel("Fase: ");
-		fase.setFont(new Font("Helvetica Neue Light", Font.PLAIN, 20));
-		add(fase, "2, 6, center, default");
+		fase.setFont(font);
+		add(fase, "2, 8, center, default");
 
 		bruta = new JLabel("Bruta: ");
-		bruta.setFont(new Font("Helvetica Neue Light", Font.PLAIN, 20));
-		add(bruta, "2, 8, center, default");
+		bruta.setFont(font);
+		add(bruta, "2, 10, center, default");
 
 		duracao = new JLabel("Duração: ");
-		duracao.setFont(new Font("Helvetica Neue Light", Font.PLAIN, 20));
-		add(duracao, "2, 10, center, default");
+		duracao.setFont(font);
+		add(duracao, "2, 12, center, default");
 
 		ciclo = new JLabel("Ciclo: ");
-		ciclo.setFont(new Font("Helvetica Neue Light", Font.PLAIN, 20));
-		add(ciclo, "2, 12, center, default");
+		ciclo.setFont(font);
+		add(ciclo, "2, 14, center, default");
 
 		bto = new JButton("Não Conectado");
-		bto.setFont(new Font("Helvetica Neue Light", Font.PLAIN, 15));
-		add(bto, "2, 14, center, default");
+		bto.setFont(font);
+		add(bto, "2, 16, center, default");
 
 		setBorder(BorderFactory.createTitledBorder("Situação Atual do Pivô"));
 		setForeground(Color.WHITE);
@@ -87,6 +98,7 @@ public class Mostrador extends JPanel {
 		case 0:
 			str = "Parado";
 			this.estado.setForeground(Color.RED);
+			bto.setText("Iniciar Irrigação");
 			break;
 		case 1:
 			str = "Motobomba";
@@ -111,6 +123,7 @@ public class Mostrador extends JPanel {
 		case 7:
 			str = "Horário de trabalho";
 			this.estado.setForeground(Color.RED);
+			bto.setText("Parar Irrigação");
 			break;
 		case 8:
 			str = "Irrigação terminada";
@@ -126,6 +139,7 @@ public class Mostrador extends JPanel {
 		}
 
 		this.estado.setText("Estado: " + str);
+		repaint();
 	}
 
 	public void setSetor(int setorAtual, int nrSetores) {
@@ -153,5 +167,39 @@ public class Mostrador extends JPanel {
 
 	public void setBto(String bto) {
 		this.bto.setText(bto);
+	}
+
+	public JButton getBto() {
+		return this.bto;
+	}
+
+	public void setQualidade(float iSinal, int porcento) {
+
+		if (porcento > 33)
+			porcento = 33;
+
+		float aux = (float) porcento / 100;
+
+		Color cor = Color.RED;
+
+		if (iSinal > (1 - aux)) {
+			cor = Color.GREEN;
+		} else if (iSinal > aux && iSinal <= (1 - aux)) {
+			cor = Color.YELLOW;
+		} else if (iSinal <= aux) {
+			cor = Color.RED;
+		}
+
+		setCor(cor);
+		this.qualidade.setText("Sinal do Modem: " + String.valueOf(iSinal));
+	}
+
+	public void setCor(Color cor) {
+		sinal.setCor(cor);
+		sinal.repaint();
+	}
+
+	public Sinal getSinal() {
+		return this.sinal;
 	}
 }

@@ -4,17 +4,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.util.Arrays;
 
 import javax.naming.SizeLimitExceededException;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import com.sun.org.apache.xpath.internal.operations.And;
 
 @SuppressWarnings("serial")
 public class Oval extends JPanel {

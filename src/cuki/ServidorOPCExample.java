@@ -29,9 +29,9 @@ public class ServidorOPCExample {
 			}
 
 			System.out.println("Verificando sinal");
-			String sinal = atos.getSignal(pivo, 30);
+			float sinal = atos.getSignal(pivo);
 
-			if (sinal.equals(ServidorOPC.sinalBom))
+			if (sinal > 0.66)
 				break;
 			else
 				System.out.println(sinal);

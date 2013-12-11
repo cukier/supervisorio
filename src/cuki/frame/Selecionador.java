@@ -96,6 +96,51 @@ public class Selecionador extends JFrame {
 
 								}
 							});
+					statusPivo.getMostrador().getBto()
+							.addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									int estado = getStatusPivo(pivo)
+											.getEstado();
+									switch (estado) {
+									case 0:
+									case 5:
+									case 8:
+										try {
+											servidorOPC.iniciaIrrigacao(pivo);
+										} catch (ComponentNotFoundException e1) {
+											e1.printStackTrace();
+										} catch (SynchWriteException e1) {
+											e1.printStackTrace();
+										} catch (SynchReadException e1) {
+											e1.printStackTrace();
+										}
+										System.out
+												.println("Irrigacao Iniciada");
+										break;
+									case 1:
+									case 2:
+									case 3:
+									case 4:
+									case 7:
+									case 9:
+										try {
+											servidorOPC.pararIrrigacao(pivo);
+										} catch (ComponentNotFoundException e1) {
+											e1.printStackTrace();
+										} catch (SynchReadException e1) {
+											e1.printStackTrace();
+										} catch (SynchWriteException e1) {
+											e1.printStackTrace();
+										}
+										System.out.println("Irrigacao Parada");
+										break;
+									default:
+										break;
+									}
+								}
+							});
 					listaStatusPivo[cont++] = statusPivo;
 					statusPivo.setVisible(true);
 					break;

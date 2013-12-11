@@ -1,10 +1,11 @@
 package cuki.bin;
 
+import java.awt.Color;
+
 import javax.naming.SizeLimitExceededException;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import javafish.clients.opc.component.OpcItem;
 import javafish.clients.opc.exception.CoUninitializeException;
 import javafish.clients.opc.exception.ComponentNotFoundException;
 import javafish.clients.opc.exception.ConnectivityException;
@@ -73,14 +74,22 @@ public class Pivo {
 				if (status != null) {
 					try {
 						atos.syncItens();
+
+						Color cor = status.getMostrador().getSinal().getCor();
+						status.getMostrador().setCor(
+								status.getContentPane().getBackground());
+						Thread.sleep(250);
+						status.getMostrador().setCor(cor);
+
+						status.getMostrador().setQualidade(
+								atos.getSignal(pivo), 33);
 						status.getOval().setAnguloFinal(
 								atos.getAnguloSetor(pivo));
 						status.setAngulo(atos.getanguloAtual(pivo));
 						status.setword(atos.getword0(pivo),
 								atos.getword4(pivo), atos.getword6(pivo));
 						status.setAngulo(atos.getanguloAtual(pivo));
-						status.getMostrador().setEstado(
-								atos.getstatusPivo(pivo));
+						status.setEstado(atos.getstatusPivo(pivo));
 						status.getMostrador().setSetor(
 								atos.getcontaSetor(pivo),
 								atos.getnrSetores(pivo));
@@ -92,9 +101,6 @@ public class Pivo {
 								atos.getTempoRestanteMinutos(pivo));
 						status.getMostrador()
 								.setCiclo(atos.getcicloAtual(pivo));
-						OpcItem item = atos.getItem(pivo, atos.getItens(pivo)
-								.getWord4());
-						System.out.println(item.toString());
 					} catch (ComponentNotFoundException e) {
 						e.printStackTrace();
 					} catch (VariantTypeException e) {

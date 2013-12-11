@@ -50,6 +50,7 @@ public class ServidorOPC {
 		group = new OpcGroup("group1", true, 500, 0.0f);
 	}
 
+	@SuppressWarnings("unused")
 	private ArrayList<String> achaItensRecursivo(String leaf,
 			ArrayList<String> lista, JOpcBrowser opcBrowser) {
 
@@ -167,9 +168,6 @@ public class ServidorOPC {
 		itensPivo = new ItensOPC[servidores.length];
 
 		int cont = 0;
-		// for (String servidor : servidores) {
-		// itensPivo[cont++] = new ItensOPC(servidor, group, jopc);
-		// }
 
 		for (String servidor : servidores) {
 
@@ -535,13 +533,9 @@ public class ServidorOPC {
 		return itens;
 	}
 
-	public String getSignal(String pivo, int porc) {
-		float porcento = (float) porc / 100;
+	public float getSignal(String pivo) {
 		boolean[] qualidade = getQuality(pivo);
 		int total = qualidade.length;
-
-		if (porcento > total / 3)
-			porcento = total / 3;
 
 		int cont = 0;
 		for (boolean ok : qualidade) {
@@ -549,13 +543,7 @@ public class ServidorOPC {
 				cont++;
 		}
 
-		String sinal = sinalRuim;
-		if (cont > total * porcento && cont <= total * (1 - porcento))
-			sinal = sinalMedio;
-		else if (cont > total * (1 - porcento))
-			sinal = sinalBom;
-
-		return sinal;
+		return (float) cont / total;
 	}
 
 	public OpcItem getItem(String pivo, OpcItem item) {

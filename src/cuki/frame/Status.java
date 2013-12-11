@@ -26,6 +26,7 @@ public class Status extends JFrame {
 	private IO plcIO = null;
 	private static int cont = -1;
 	private String pivo;
+	private int estado;
 
 	public Status(String pivo) {
 		cont++;
@@ -52,7 +53,6 @@ public class Status extends JFrame {
 
 		ang = new AnguloAtual();
 		getContentPane().add(ang, "cell 0 2,grow");
-		// ang.getBto().addActionListener(new MudarSentido());
 
 		setTitle(pivo);
 
@@ -145,5 +145,14 @@ public class Status extends JFrame {
 
 	public String getPivoName() {
 		return this.pivo;
+	}
+
+	public void setEstado(int estado) {
+		this.estado = estado;
+		most.setEstado(estado);
+	}
+
+	public int getEstado() {
+		return this.estado;
 	}
 }

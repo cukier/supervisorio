@@ -39,9 +39,9 @@ public class ServidorOPCWriteExample {
 			// if (ok)
 			// break;
 
-			String sinal = atos.getSignal(pivo, 30);
+			float sinal = atos.getSignal(pivo);
 			System.out.println(sinal);
-			if (sinal.equals(ServidorOPC.sinalBom))
+			if (sinal > 0.33)
 				break;
 		}
 	}

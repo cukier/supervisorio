@@ -12,9 +12,6 @@ import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 @SuppressWarnings("serial")
 public class AnguloAtual extends JPanel {
 
